@@ -1,0 +1,93 @@
+@import "../../base";
+
+.sidebar{
+  background: $black-secondary;
+
+  display: flex;
+  flex-direction: column;
+  width: 250px;
+  height: 90vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  //scrollbar-color: $black-secondary $black-secondary;
+  &::-webkit-scrollbar{
+    width: 0;
+  }
+  scrollbar-width: none;
+
+  transition: transform 0.2s ease-in;
+
+  position: sticky;
+  top: 10vh;
+  left: 0;
+
+  //scroll-behavior: unset;
+
+    li{
+      padding: 0.6rem 1.5rem;
+      margin: 0.2rem 1rem;
+      cursor: pointer;
+
+      span{
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 0.4px;
+      }
+
+      &:hover{
+        background-color: $border-color ;
+        //margin: 0 10px;
+        border-radius:  0.6rem ;
+      }
+    }
+
+  hr{
+    background-color: $border-color;
+  }
+
+  &.open{
+    transform: translateX(0);
+    div{
+
+        display: block;
+
+    }
+  }
+
+  &:hover{
+    //overflow-y: scroll;
+    &::-webkit-scrollbar{
+      width: 4px;
+    }
+    scrollbar-width: thin;
+    scrollbar-color: $text-color $black-secondary ;
+  }
+
+
+}
+
+@media (max-width: $breakpoint-medium) {
+  .sidebar{
+    width: 90px;
+    div{
+      align-items: center;
+    }
+    span{
+      display: none;
+    }
+
+
+  }
+}
+
+@media (max-width: $breakpoint-small) {
+  .sidebar {
+    transform: translateX(-100%);
+    div {
+      display: none;
+    }
+
+    position: fixed;
+    z-index: 999;
+  }
+}
