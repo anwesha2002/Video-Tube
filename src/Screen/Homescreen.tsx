@@ -92,6 +92,8 @@ export function HomeScreen(){
                     ))
 
                     }
+
+
                 </InfiniteScroll>
 
             {/*<div className="border border-primary w-100 m-0">HomeScreen</div>*/}
