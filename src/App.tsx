@@ -14,6 +14,7 @@ import {PrivateRoute} from "./Component/PrivateRoute/privateRoute.tsx";
 import {WatchScreen} from "./Screen/WatchScreen/WatchScreen.tsx";
 import {SearchScreen} from "./Screen/SearchScreen/SearchScreen.tsx";
 import {Subscription} from "./Screen/Subscription/Subscription.tsx";
+import {ChannelScreen} from "./Screen/channelScreen/channelScreen.tsx";
 
 function App() {
   const [count, setCount] = useState(0)
@@ -47,6 +48,13 @@ function App() {
             <PrivateRoute>
                 <Home>
                     <Subscription/>
+                </Home>
+            </PrivateRoute>
+        }></Route>
+        <Route path="/feed/:channelId" element={
+            <PrivateRoute>
+                <Home>
+                    <ChannelScreen/>
                 </Home>
             </PrivateRoute>
         }></Route>

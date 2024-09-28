@@ -26,8 +26,9 @@ import {useAppDispatch , useAppSelector} from "../../redux/store.ts";
 import {logout} from "../../redux/authSlice.ts";
 import {Link} from "react-router-dom";
 import {useEffect} from "react";
-import {getsubscriptions} from "../../redux/subscriptionsSlice.ts";
+// import {getsubscriptions} from "../../redux/subscriptionsSlice.ts";
 import {VideoHorizontal} from "../VideoHorizontal/VideoHorizontal.tsx";
+import {getsubscriptions} from "../../Data/fetchApi.ts";
 
 export function Sidebar({showSidebar}){
 
@@ -38,7 +39,8 @@ export function Sidebar({showSidebar}){
     const dispatch = useAppDispatch()
 
     useEffect ( () => {
-        dispatch(getsubscriptions())
+        // dispatch(getsubscriptions())
+        getsubscriptions().then(()=>{})
     } , [dispatch] );
 
     const { subscriptions, loading } = useAppSelector(state => state.subscriptions)
@@ -46,10 +48,12 @@ export function Sidebar({showSidebar}){
     return(
         <Nav className={`sidebar ${showSidebar ? "open" : " "}`}>
             <div className="mt-4  sm:none">
-                <li className="d-flex align-items-center ">
-                    <MdHome size={23}/>
-                    <span className="ms-3">Home</span>
-                </li>
+                <Link to="/" style={{textDecoration : "none", color : "inherit"}}>
+                    <li className="d-flex align-items-center ">
+                        <MdHome size={23}/>
+                        <span className="ms-3">Home</span>
+                    </li>
+                </Link>
                 <li className="d-flex align-items-center">
                     <SiYoutubeshorts size={23}/>
                     <span className="ms-3">Shorts</span>
@@ -61,7 +65,7 @@ export function Sidebar({showSidebar}){
 
                 <hr></hr>
 
-                <li>
+                <li className="d-flex align-items-center ">
                     <span>You</span>
                     <IoIosArrowForward className="ms-2" size={23}/>
                 </li>
@@ -126,7 +130,7 @@ export function Sidebar({showSidebar}){
                 </li>
                 <li className="d-flex align-items-center">
                     <PiMusicNoteLight  size={23}/>
-                    <span className="ms-2">Music</span>
+                    <span className="ms-3">Music</span>
                 </li>
                 <li className="d-flex align-items-center ">
                     <PiFilmSlateBold    size={23}/>
@@ -146,7 +150,7 @@ export function Sidebar({showSidebar}){
                 </li>
                 <li className="d-flex align-items-center">
                     <GrTrophy  size={23}/>
-                    <span className="ms-2">Sport</span>
+                    <span className="ms-3">Sport</span>
                 </li>
                 <li className="d-flex align-items-center ">
                     <AiOutlineBulb   size={23}/>

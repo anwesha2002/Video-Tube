@@ -6,11 +6,12 @@ import {VideoHorizontal} from "../../Component/VideoHorizontal/VideoHorizontal.t
 import {useParams} from "react-router-dom";
 import {useAppDispatch , useAppSelector} from "../../redux/store.ts";
 import {useEffect} from "react";
-import {getVideosById} from "../../redux/selectVideoSlice.ts";
+// import {getVideosById} from "../../redux/selectVideoSlice.ts";
 import {GetComments} from "../../redux/commentSlice.ts";
-import {getReletedVideos} from "../../redux/relatedVideoSlice.ts";
+// import {getReletedVideos} from "../../redux/relatedVideoSlice.ts";
 import {SkeletonVideo} from "../../Component/Skeleton/SkeletonVideo.tsx";
 import Skeleton , {SkeletonTheme} from "react-loading-skeleton";
+import {getReletedVideos , getVideosById} from "../../Data/fetchApi.ts";
 
 export function WatchScreen() {
 
@@ -19,8 +20,11 @@ export function WatchScreen() {
     const dispatch = useAppDispatch()
 
     useEffect ( () => {
-        dispatch(getVideosById({id : id}))
-        dispatch(getReletedVideos({id : id}))
+        // dispatch(getVideosById({id : id}))
+        // dispatch(getReletedVideos({id : id}))
+
+        getVideosById({id : id}).then(()=>{})
+        getReletedVideos({id : id}).then(()=>{})
         // dispatch(GetComments({id : id}))
     } , [dispatch, id] );
 

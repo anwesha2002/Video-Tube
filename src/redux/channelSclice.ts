@@ -7,14 +7,16 @@ interface channelType {
     loading : boolean,
     channel : any,
     subscriptionStatus : boolean,
-    error : null | string
+    error : null | string,
+    channelVideos : any[]
 }
 
 const initialState : channelType = {
     loading : false,
     channel : {},
     subscriptionStatus : false,
-    error : null
+    error : null,
+    channelVideos : []
 }
 
 export const channelBYID = createAsyncThunk<
@@ -30,7 +32,6 @@ export const channelBYID = createAsyncThunk<
                     id
                 }
             })
-            console.log(getState().auth.accessToken)
             return {channel : res.data.items[0]}
         }catch (error){
             return rejectWithValue(error.message)
@@ -58,6 +59,39 @@ export const SubStat = createAsyncThunk<
             console.log(res.data.items)
             return {subscriptionStatus : res.data.items.length !== 0}
         }catch (error){
+            return rejectWithValue(error.response.data)
+        }
+    }
+)
+
+export const getVideosByChannel = createAsyncThunk<
+    {channelVideos : []},
+    {id : string},
+    {rejectValue : string}
+>(
+    'channel/getVideosByChannel',async ({id},{rejectWithValue, getState}) => {
+        try {
+            const res = await FetchApi("/channels",{
+                params : {
+                    part: 'contentDetails',
+                    id: id,
+                }
+            })
+
+            const uploadPlaylistId = res.data.items[0].contentDetails.relatedPlaylists.uploads
+
+            const channelres = await FetchApi("/playlistItems",{
+                params : {
+                    part: 'snippet,contentDetails',
+                    playlistId: uploadPlaylistId,
+                    maxResults: 30,
+                }
+            })
+            console.log(channelres.data.items)
+            console.log(res.data.items)
+            return {channelVideos : channelres.data.items}
+        }catch (error){
+            console.log(error.response.data)
             return rejectWithValue(error.response.data)
         }
     }
@@ -95,6 +129,19 @@ export const channelSlice = createSlice({
             .addCase(SubStat.rejected, (state :channelType, action)=>{
                 state.loading = false
                 state.error = action.payload || 'failed'
+            })
+            .addCase(getVideosByChannel.pending,(state : channelType)=>{
+                state.loading = true
+                state.error = null
+            })
+            .addCase(getVideosByChannel.fulfilled, (state :channelType, action)=>{
+                state.loading = false
+                state.error = null
+                state.channelVideos = action.payload.channelVideos
+            })
+            .addCase(getVideosByChannel.rejected, (state :channelType, action)=>{
+                state.loading = false
+                state.error = action.payload || 'videos not found'
             })
     }
 })

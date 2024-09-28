@@ -1,10 +1,11 @@
 import React , {useEffect , useState} from 'react';
 import {useParams} from "react-router-dom";
 import {useAppDispatch , useAppSelector} from "../../redux/store.ts";
-import {searchVideosByKeyword} from "../../redux/searchVideoSlice.ts";
+// import {searchVideosByKeyword} from "../../redux/searchVideoSlice.ts";
 import {Container} from "react-bootstrap";
 import {VideoHorizontal} from "../../Component/VideoHorizontal/VideoHorizontal.tsx";
 import Skeleton , {SkeletonTheme} from "react-loading-skeleton";
+import {searchVideosByKeyword} from "../../Data/fetchApi.ts";
 
 export function SearchScreen() {
 
@@ -16,7 +17,9 @@ export function SearchScreen() {
     console.log("query" , query)
 
     useEffect ( () => {
-        dispatch(searchVideosByKeyword( {keyword : query }))
+        // dispatch(searchVideosByKeyword( {keyword : query }))
+        searchVideosByKeyword( {keyword : query }).then(()=>{})
+
         query?.trim() !== "" && setSearchResult(true)
     } , [dispatch,query] );
 

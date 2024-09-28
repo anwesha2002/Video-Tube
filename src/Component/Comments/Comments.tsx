@@ -4,7 +4,8 @@ import {Form} from "react-bootstrap";
 import {useAppDispatch , useAppSelector} from "../../redux/store.ts";
 import {useEffect , useState} from "react";
 import {getVideosById} from "../../redux/selectVideoSlice.ts";
-import {GetComments , postComments} from "../../redux/commentSlice.ts";
+import {GetComments , postComments} from "../../Data/fetchApi.ts";
+// import {GetComments , postComments} from "../../redux/commentSlice.ts";
 
 type CommentsProps = {
     videoId? : string,
@@ -18,8 +19,8 @@ export function Comments({videoId, totalComments} : CommentsProps){
     const dispatch = useAppDispatch()
 
     useEffect ( () => {
-        dispatch(GetComments({id : videoId}))
-
+        // dispatch(GetComments({id : videoId}))
+        GetComments({id : videoId}).then(()=>{})
     } , [dispatch, videoId] );
 
     const { comments } = useAppSelector(state => state.comment)
@@ -37,7 +38,8 @@ export function Comments({videoId, totalComments} : CommentsProps){
         e.preventDefault()
         setCommentText(commentText)
         if(commentText.length == 0) return
-        dispatch(postComments({id : videoId, text : commentText}))
+        // dispatch(postComments({id : videoId, text : commentText}))
+        postComments({id : videoId, text : commentText}).then(()=>{})
         setCommentText("")
     }
 

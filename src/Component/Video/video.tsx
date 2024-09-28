@@ -8,7 +8,7 @@ import {useEffect , useState} from "react";
 import {FetchApi} from "../../Data/fetchApi.ts";
 import {useNavigate} from "react-router-dom";
 
-export function Video({item}){
+export function Video({item, channelScreen}){
 
     const {
         id,
@@ -30,26 +30,30 @@ export function Video({item}){
 
     useEffect ( () => {
         (async ()=>{
-           const res = await FetchApi('/videos',{
-               params:{
-                   part: 'contentDetails,statistics',
-                   id:_videoId
-               }
-           })
-            setVidDuration(res.data.items[0].contentDetails.duration)
-            setViews(res.data.items[0].statistics.viewCount)
+           // const res = await FetchApi('/videos',{
+           //     params:{
+           //         part: 'contentDetails,statistics',
+           //         id:_videoId
+           //     }
+           // })
+           //  setVidDuration(res.data.items[0].contentDetails.duration)
+           //  setViews(res.data.items[0].statistics.viewCount)
+
+            console.log("Duration in video")
+            console.log("Views in video")
         })()
     } , [_videoId] );
 
     useEffect ( () => {
         (async ()=>{
-            const res = await FetchApi('/channels',{
-                params:{
-                    part: 'snippet',
-                    id:channelId
-                }
-            })
-            setChannelIcon(res.data.items[0].snippet.thumbnails.default)
+            // const res = await FetchApi('/channels',{
+            //     params:{
+            //         part: 'snippet',
+            //         id:channelId
+            //     }
+            // })
+            // setChannelIcon(res.data.items[0].snippet.thumbnails.default)
+            console.log("ChannelIcon in video")
         })()
     } , [channelId] );
 
@@ -64,7 +68,7 @@ export function Video({item}){
     return(
         <div className='video' onClick={handleClick}>
             <div className='video__top'>
-                 <img src={medium.url} alt='' />
+                 <img src="https://i.ytimg.com/vi/mpKKcqWnTus/default.jpg" alt='' />
                 {/*<LazyLoadImage src={medium.url} effect='blur' />*/}
                 <span className='video__top__duration'>{_duration}</span>
             </div>
@@ -75,14 +79,14 @@ export function Video({item}){
             </span>{'  '}
                 <span> {moment(publishedAt).fromNow()} </span>
             </div>
-            {/*{!channelScreen && (*/}
+            {!channelScreen && (
                 <div className='video__channel'>
                     {/*<LazyLoadImage src={channelIcon?.url} effect='blur' />*/}
                     <img src={channelIcon?.url} effect='blur' />
 
                     <p>{channelTitle}</p>
                 </div>
-            {/*)}*/}
+            )}
         </div>
     )
 }

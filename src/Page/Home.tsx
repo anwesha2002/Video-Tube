@@ -20,9 +20,9 @@ export function Home({children}){
     return(
         <>
             <Header handleToggleSidebar={handleToggleSidebar}/>
-            <div className="app_container border border-info">
+            <div className="app_container ">
                 <Sidebar showSidebar={showSidebar}/>
-                <Container className="border border-primary w-100 m-0">
+                <Container fluid className=" w-100 m-0">
                     {/*<HomeScreen/>*/}
                     {children}
                 </Container>

@@ -4,9 +4,10 @@ import {Video} from "../Component/Video/video.tsx";
 import axios from "axios";
 import {useEffect , useState} from "react";
 import {useAppDispatch , useAppSelector} from "../redux/store.ts";
-import {getVideosByKeyword , getyoutubeVideos} from "../redux/videoSlice.ts";
+// import {getVideosByKeyword , getyoutubeVideos} from "../redux/videoSlice.ts";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {SkeletonVideo} from "../Component/Skeleton/SkeletonVideo.tsx";
+import {getVideosByKeyword , getyoutubeVideos} from "../Data/fetchApi.ts";
 
 export function HomeScreen(){
 
@@ -48,17 +49,23 @@ export function HomeScreen(){
 
 
     useEffect ( () => {
-        dispatch(getyoutubeVideos())
+        // dispatch(getyoutubeVideos())
+
+        getyoutubeVideos().then(()=>{})
     } , [dispatch] );
 
 
     const fetData = () => {
         if(activeCategory === 'All') {
-            dispatch(getyoutubeVideos())
+            // dispatch(getyoutubeVideos())
+
+            getyoutubeVideos().then(()=>{})
         }
         else {
             console.log(JSON.parse(category))
-            dispatch(getVideosByKeyword({ keyword: JSON.parse(category) }))
+            // dispatch(getVideosByKeyword({ keyword: JSON.parse(category) }))
+
+            getVideosByKeyword({ keyword: JSON.parse(category) }).then(()=>{})
         }
 
     }

@@ -42,29 +42,36 @@ export function VideoHorizontal({videos, searchScreen, searchresult, subScreen})
 
     useEffect ( () => {
         isVideo && (async ()=>{
-            const res = await FetchApi('/videos',{
-                params:{
-                    part: 'contentDetails,statistics',
-                    id: id.videoId
-                }
-            })
-            setDuration(res.data.items[0].contentDetails.duration)
-            setViews(res.data.items[0].statistics.viewCount)
+            // const res = await FetchApi('/videos',{
+            //     params:{
+            //         part: 'contentDetails,statistics',
+            //         id: id.videoId
+            //     }
+            // })
+            // setDuration(res.data.items[0].contentDetails.duration)
+            // setViews(res.data.items[0].statistics.viewCount)
+
+            console.log("duration in video horizontal")
+            console.log("Views in video horizontal")
         })()
     } , [id, isVideo] );
 
     useEffect ( () => {
         (async ()=>{
-            const res = await FetchApi('/channels',{
-                params:{
-                    part: 'snippet, statistics',
-                    id:_channelId
-                }
-            })
-            setChannelIcon(res.data.items[0].snippet.thumbnails.default)
-            {subScreen &&
-                setsubscriberCount ( res.data.items[0].statistics.subscriberCount )
-            }
+            // const res = await FetchApi('/channels',{
+            //     params:{
+            //         part: 'snippet, statistics',
+            //         id:_channelId
+            //     }
+            // })
+            // setChannelIcon(res.data.items[0].snippet.thumbnails.default)
+
+            console.log("ChannelIcon in video horizontal")
+            // {subScreen &&
+            //     setsubscriberCount ( res.data.items[0].statistics.subscriberCount )
+            // }
+            console.log("subscriberCount in video horizontal")
+
         })()
     } , [_channelId] );
 

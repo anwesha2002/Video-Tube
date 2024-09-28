@@ -4,12 +4,17 @@ import {AiOutlineSearch} from "react-icons/ai";
 import {MdApps , MdNotifications} from "react-icons/md";
 import ytLogo from "../../public/Youtube_logo.png"
 import "./_header.scss"
-import {useState} from "react";
+import {useEffect , useState} from "react";
 import {useNavigate} from "react-router-dom";
+import {useAppDispatch , useAppSelector} from "../../redux/store.ts";
 
 export function Header({handleToggleSidebar}){
     const [input, setInput] = useState("")
     const navigate= useNavigate()
+
+    // const dispatch = useAppDispatch()
+    const { user } = useAppSelector(state => state.auth)
+
 
     function handleSubmit(e){
         e.preventDefault()
@@ -42,8 +47,8 @@ export function Header({handleToggleSidebar}){
                         <MdNotifications size={28}/>
                         <MdApps size={28}/>
                         <img
-                            src={ytLogo}
-                            className=" object-fit-contain d-block"
+                            src={user.profileURL}
+                            className=" object-fit-cover d-block rounded-circle"
                         />
                     </div>
                 </Col>

@@ -1,17 +1,19 @@
-import "./Subscription.css"
+import "./Subscription.scss"
 import {useAppDispatch , useAppSelector} from "../../redux/store.ts";
 import {useEffect} from "react";
-import {getsubscriptions} from "../../redux/subscriptionsSlice.ts";
+// import {getsubscriptions} from "../../redux/subscriptionsSlice.ts";
 import {Container} from "react-bootstrap";
 import {VideoHorizontal} from "../../Component/VideoHorizontal/VideoHorizontal.tsx";
 import Skeleton , {SkeletonTheme} from "react-loading-skeleton";
+import {getsubscriptions} from "../../Data/fetchApi.ts";
 
 export function Subscription() {
 
     const dispatch = useAppDispatch()
 
     useEffect ( () => {
-        dispatch(getsubscriptions())
+        // dispatch(getsubscriptions())
+        getsubscriptions().then(()=>{})
     } , [dispatch] );
 
     const { subscriptions, loading } = useAppSelector(state => state.subscriptions)
