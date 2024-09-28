@@ -4,8 +4,19 @@ import {AiOutlineSearch} from "react-icons/ai";
 import {MdApps , MdNotifications} from "react-icons/md";
 import ytLogo from "../../public/Youtube_logo.png"
 import "./_header.scss"
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 export function Header({handleToggleSidebar}){
+    const [input, setInput] = useState("")
+    const navigate= useNavigate()
+
+    function handleSubmit(e){
+        e.preventDefault()
+        setInput(input)
+        if(input.trim() !== "")  navigate(`search/${input}`)
+    }
+
     return(
         <div className=" header d-flex justify-content-between align-items-center">
             <FaBars className="header_bar" size={28} onClick={()=>handleToggleSidebar()}/>
@@ -17,12 +28,12 @@ export function Header({handleToggleSidebar}){
                     />
                 </Col>
                 <Col lg={6} sm={10}>
-                    <form className="d-flex justify-content-center  m-1 rounded-5 ">
-                        <input type="text" placeholder="Search"/>
+                    <form className="d-flex justify-content-center  m-1 rounded-5 " onSubmit={handleSubmit}>
+                        <input type="search" placeholder="Search" value={input} onChange={(e)=>setInput(e.target.value)}/>
                         <div className="rounded-end-5">
-                            <Button type="submit" className="d-flex align-items-center px-4">
+                            <button type="submit" className="d-flex align-items-center px-4 py-1">
                                 <AiOutlineSearch size={28}/>
-                            </Button>
+                            </button>
                         </div>
                     </form>
                 </Col>

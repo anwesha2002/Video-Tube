@@ -24,7 +24,7 @@ export const getyoutubeVideos = createAsyncThunk<
     void,
     {rejectValue : string}
 >(
-    'auth/getvideos',
+    'yt_video/getvideos',
     async (_, {rejectWithValue, getState}) => {
         try {
             const res = await FetchApi("/videos",{
@@ -36,7 +36,7 @@ export const getyoutubeVideos = createAsyncThunk<
                     pageToken: getState().homeVideos.nextPageToken,
                 }
             })
-            console.log(res.data.items)
+            // console.log(res.data.items)
             return { videos : res.data.items, nextPageToken : res.data.nextPageToken , activeCategory : getState().homeVideos.activeCategory}
         }catch (error){
             return rejectWithValue(error.message)
@@ -49,7 +49,7 @@ export const getVideosByKeyword = createAsyncThunk<
     {keyword : string },
     {rejectValue : string}
 >(
-    'auth/getvideosbykeyword',
+    'yt_video/getvideosbykeyword',
     async ({ keyword } , {rejectWithValue,getState}) => {
         try {
             const res = await FetchApi("/search",{
@@ -61,7 +61,7 @@ export const getVideosByKeyword = createAsyncThunk<
                     type : 'video'
                 }
             })
-            // console.log('keyword',keyword)
+            console.log('keyword',keyword)
             // console.log('keyword',res.data.items)
             return { videos : res.data.items, nextPageToken : res.data.nextPageToken, activeCategory : keyword }
         }catch (error){
@@ -69,6 +69,8 @@ export const getVideosByKeyword = createAsyncThunk<
         }
     }
 )
+
+
 export const videoSliceStore = createSlice({
     name : 'yt_video',
     initialState,
@@ -111,10 +113,11 @@ export const videoSliceStore = createSlice({
                // state.activeCategory = 'All'
                // console.log(action.payload.activeCategory)
            })
-           .addCase(getVideosByKeyword.pending,(state : ItemState, action)=>{
+           .addCase(getVideosByKeyword.pending,(state : ItemState)=>{
                state.loading = true
                state.error = null
-               // state.activeCategory = action.payload.activeCategory
+               // state.activeCategory = action.meta.arg.keyword
            })
     }
 })
+

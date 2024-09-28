@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect , useState} from "react";
 import "./_categoryBar.scss"
 import {useAppDispatch} from "../../redux/store.ts";
 import {getVideosByKeyword , getyoutubeVideos} from "../../redux/videoSlice.ts";
@@ -32,6 +32,7 @@ export function CategoryBar(){
 
     function HandleClick(value : string){
         setActiveElement(value)
+        sessionStorage.setItem("keyword" , JSON.stringify(value))
         if (value === 'All') {
             dispatch(getyoutubeVideos())
         }
@@ -40,6 +41,11 @@ export function CategoryBar(){
         }
         console.log(value)
     }
+
+
+    // useEffect(()=>{
+    //     setActiveElement(sessionStorage.getItem("keyword"))
+    // },[])
 
     return(
         <div className="categoryBar">

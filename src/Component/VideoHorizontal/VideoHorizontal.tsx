@@ -3,52 +3,143 @@ import "./_videoHorizontal.scss"
 import {AiFillEye} from "react-icons/ai";
 import moment from "moment";
 import numeral from "numeral";
+import {useEffect , useState} from "react";
+import {FetchApi} from "../../Data/fetchApi.ts";
+import {redirect , replace , useNavigate} from "react-router-dom";
 
-export function VideoHorizontal(){
+export function VideoHorizontal({videos, searchScreen, searchresult, subScreen}){
+
+    const [views, setViews] = useState()
+    const [duration, setDuration] = useState()
+    const [channelIcon, setChannelIcon] = useState(null)
+    const [subscriberCount, setsubscriberCount] = useState(null)
+
+    const navigate = useNavigate()
+
+    const descWidth = {
+        width : searchresult ? "auto" :""
+    }
+
+    const {
+        id,
+        snippet: {
+            channelId,
+            channelTitle,
+            description,
+            title,
+            publishedAt,
+            thumbnails: { medium },
+            resourceId,
+        },
+    } = videos
+
+    if(!id) return
+
+    const isVideo = !(id.kind === 'youtube#channel' || subScreen)
+
+    const _channelId = resourceId?.channelId || channelId
+
+
+    useEffect ( () => {
+        isVideo && (async ()=>{
+            const res = await FetchApi('/videos',{
+                params:{
+                    part: 'contentDetails,statistics',
+                    id: id.videoId
+                }
+            })
+            setDuration(res.data.items[0].contentDetails.duration)
+            setViews(res.data.items[0].statistics.viewCount)
+        })()
+    } , [id, isVideo] );
+
+    useEffect ( () => {
+        (async ()=>{
+            const res = await FetchApi('/channels',{
+                params:{
+                    part: 'snippet, statistics',
+                    id:_channelId
+                }
+            })
+            setChannelIcon(res.data.items[0].snippet.thumbnails.default)
+            {subScreen &&
+                setsubscriberCount ( res.data.items[0].statistics.subscriberCount )
+            }
+        })()
+    } , [_channelId] );
+
+    const seconds = moment.duration(duration).asSeconds()
+    const _duration = moment.utc(seconds * 1000).format('mm:ss')
+
+    const _videoId : string = id.videoId
+    function handleClick(){
+        isVideo ?
+        navigate(`../${_videoId}`,{relative : "path", replace : true, state : _videoId})
+            : navigate(`../${_channelId}`,{relative : "path", replace : true, state : _channelId})
+    }
+
+    const thumbnail = !isVideo && 'videoHorizontal_thumbnail_channel'
+
+    console.log(channelIcon)
 
     return (
-        <Row
-            className='py-2 m-1 videoHorizontal align-items-center'>
+        <Row className='py-2 m-1 videoHorizontal align-items-center' onClick={handleClick}>
             {/* //TODO refractor grid */}
+
+
+
             <Col
                 xs={6}
-                className='videoHorizontal__left'>
+                md={ searchScreen || subScreen  ? 4 : 6}
+                className='videoHorizontal_left'>
+                {/*<LazyLoadImage*/}
+                {/*    src={medium.url}*/}
+                {/*    effect='blur'*/}
+                {/*    className={`videoHorizontal__thumbnail ${thumbnail} `}*/}
+                {/*    wrapperClassName='videoHorizontal__thumbnail-wrapper'*/}
+                {/*/>*/}
                 <img
-                    src="https://i.ytimg.com/vi/Ys7L5rFN4PA/default.jpg"
-                    // className={`videoHorizontal__thumbnail ${thumbnail} `}
-                    // wrapperClassName='videoHorizontal__thumbnail-wrapper'
+                    src={ medium?.url }
+                    alt=''
+                    className={ ` videoHorizontal_thumbnail ${thumbnail}` }
                 />
-
-                    <span className='videoHorizontal__duration'>5.4</span>
-
+                {isVideo &&
+                    <span className='videoHorizontal_duration'>{_duration}</span>
+                }
             </Col>
             <Col
                 xs={6}
-                // md={searchScreen || subScreen ? 8 : 6}
-                className='p-0 videoHorizontal__right'>
-                <p className='mb-1 videoHorizontal__title'>titl</p>
+                md={ searchScreen || subScreen  ? 8 : 6}
+                className='p-0 videoHorizontal_right' >
+                <p className='mb-1 videoHorizontal_title'>{ title }</p>
 
+                <p className='mb-0 text-secondary videoHorizontal_channel'>{channelTitle}</p>
 
-                    <div className='videoHorizontal__details'>
-                        <AiFillEye /> {numeral(100000).format('0.a')} Views •
-                        {moment(4.5).fromNow()}
-                    </div>
+                { isVideo &&
+                    <div className='videoHorizontal_details text-secondary'>
+                    { numeral ( views ).format ( '0.a' ) } Views •
+                    { moment ( publishedAt ).fromNow () }
+                </div>
+                }
 
+                {subScreen &&
+                    <div className='videoHorizontal_details ' style={{fontSize: "0.7rem"}}>{numeral ( subscriberCount ).format ( '0.a' )} Subscribers</div>
+                }
 
-                    <p className='mt-1 videoHorizontal__desc'>description</p>
-
-
-                <div className='my-1 videoHorizontal__channel d-flex align-items-center'>
-
-                        <img src="https://i.ytimg.com/vi/Ys7L5rFN4PA/default.jpg"  />
-
-                    <p className='mb-0'>ctitle</p>
+                <div className='my-1 videoHorizontal_channel d-flex align-items-center'>
+                    {isVideo && searchresult &&
+                        <img src={channelIcon?.url}  />
+                    }
+                    { isVideo && searchresult && <p className='mb-0'>{ channelTitle }</p> }
                 </div>
 
-                    <p className='mt-2'>
-                         Videos
-                    </p>
+                { searchScreen || searchresult || subScreen && <p className='mt-1 videoHorizontal_desc text-secondary'>{ description }</p> }
 
+                {subScreen && (
+                    <p className='mt-2'>
+                        {videos?.contentDetails?.totalItemCount} Videos
+                    </p>
+                )}
             </Col>
         </Row>
     )

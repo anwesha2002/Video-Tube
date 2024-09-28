@@ -1,21 +1,28 @@
 import moment from "moment";
 import "./_comment.scss"
 
-export function Comment(){
+export function Comment({comment}){
+
+    const {
+        authorDisplayName,
+        authorProfileImageUrl,
+        publishedAt,
+        textDisplay,
+    } = comment
 
 
 return (
-    <div className='p-2 comment d-flex'>
+    <div className='p-2  comment d-flex'>
         <img
-            src="https://i.ytimg.com/vi/Ys7L5rFN4PA/default.jpg"
+            src={ authorProfileImageUrl }
             alt=''
-            className='mr-3 rounded-circle'
+            className='me-3 rounded-circle'
         />
-        <div className='comment__body'>
-            <p className='mb-1 comment__header'>
-                name• {moment(4.45).fromNow()}
+        <div className='comment_body'>
+            <p className='mb-1 comment_header'>
+                { authorDisplayName } • <span className="text-secondary ">{moment(publishedAt).fromNow()}</span>
             </p>
-            <p className='mb-0'>txt</p>
+            <p className='mb-0'>{ textDisplay }</p>
         </div>
     </div>
 )

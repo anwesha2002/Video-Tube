@@ -6,6 +6,7 @@ import moment from 'moment'
 import numeral from 'numeral'
 import {useEffect , useState} from "react";
 import {FetchApi} from "../../Data/fetchApi.ts";
+import {useNavigate} from "react-router-dom";
 
 export function Video({item}){
 
@@ -24,6 +25,8 @@ export function Video({item}){
     const [channelIcon, setChannelIcon] = useState(null)
     const [vidDuration, setVidDuration] = useState(null)
     const [views, setViews] = useState(null)
+
+    const navigate = useNavigate()
 
     useEffect ( () => {
         (async ()=>{
@@ -53,9 +56,13 @@ export function Video({item}){
     const second = moment.duration(vidDuration).asSeconds();
     const _duration = moment.utc(second * 1000).format("mm:ss")
 
+    function handleClick(){
+        navigate(`watch/${_videoId}`)
+    }
+
 
     return(
-        <div className='video' >
+        <div className='video' onClick={handleClick}>
             <div className='video__top'>
                  <img src={medium.url} alt='' />
                 {/*<LazyLoadImage src={medium.url} effect='blur' />*/}

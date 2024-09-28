@@ -7,7 +7,7 @@ import {useAppDispatch , useAppSelector} from "../redux/store.ts";
 import {getVideosByKeyword , getyoutubeVideos} from "../redux/videoSlice.ts";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {SkeletonVideo} from "../Component/Skeleton/SkeletonVideo.tsx";
-import Skeleton , {SkeletonTheme} from "react-loading-skeleton";
+
 export function HomeScreen(){
 
     const dispatch = useAppDispatch()
@@ -41,8 +41,9 @@ export function HomeScreen(){
     //     }
     // }
 
-    const {videos, activeCategory, loading} = useAppSelector((state)=> state.homeVideos)
+    const {videos, activeCategory, loading, nextPageToken} = useAppSelector((state)=> state.homeVideos)
 
+    const category = sessionStorage.getItem("keyword")
     // const[homeVideos, setHomeVideos] = useState([])
 
 
@@ -56,14 +57,16 @@ export function HomeScreen(){
             dispatch(getyoutubeVideos())
         }
         else {
-            dispatch(getVideosByKeyword(activeCategory))
+            console.log(JSON.parse(category))
+            dispatch(getVideosByKeyword({ keyword: JSON.parse(category) }))
         }
 
-        console.log(activeCategory)
     }
 
-    console.log(activeCategory)
-    console.log(loading)
+    // console.log(activeCategory)
+    // console.log(loading)
+
+    // console.log(videos)
 
 
     return(
@@ -71,7 +74,7 @@ export function HomeScreen(){
             <CategoryBar/>
                 <InfiniteScroll
                     next={fetData}
-                    hasMore={true}
+                    hasMore={!!nextPageToken}
                     loader={
                         <div className="spinner-border text-danger d-block mx-auto"></div>
                     }

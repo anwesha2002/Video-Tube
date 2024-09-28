@@ -1,11 +1,11 @@
 import {Nav} from "react-bootstrap";
 import {
     MdExitToApp ,
-    MdFireplace ,
+    MdFireplace , MdFormatListBulleted ,
     MdHistory ,
     MdHome ,
     MdNewspaper ,
-    MdOutlinePodcasts ,
+    MdOutlinePodcasts , MdPages ,
     MdPlaylistPlay ,
     MdSubscriptions ,
     MdThumbUp ,
@@ -22,8 +22,12 @@ import {HiSignal} from "react-icons/hi2";
 import {GrTrophy} from "react-icons/gr";
 import {GiHanger} from "react-icons/gi";
 import {AiOutlineBulb} from "react-icons/ai";
-import {useAppDispatch} from "../../redux/store.ts";
+import {useAppDispatch , useAppSelector} from "../../redux/store.ts";
 import {logout} from "../../redux/authSlice.ts";
+import {Link} from "react-router-dom";
+import {useEffect} from "react";
+import {getsubscriptions} from "../../redux/subscriptionsSlice.ts";
+import {VideoHorizontal} from "../VideoHorizontal/VideoHorizontal.tsx";
 
 export function Sidebar({showSidebar}){
 
@@ -32,6 +36,12 @@ export function Sidebar({showSidebar}){
     }
 
     const dispatch = useAppDispatch()
+
+    useEffect ( () => {
+        dispatch(getsubscriptions())
+    } , [dispatch] );
+
+    const { subscriptions, loading } = useAppSelector(state => state.subscriptions)
 
     return(
         <Nav className={`sidebar ${showSidebar ? "open" : " "}`}>
@@ -86,6 +96,18 @@ export function Sidebar({showSidebar}){
                 <li>
                     <span>Subscriptions</span>
                 </li>
+                { subscriptions?.map ( video => (
+                    <li className="d-flex align-items-center">
+                        <img src={video.snippet?.thumbnails?.medium?.url}  style={{height:"20px", width : "20px" , borderRadius:"50%"}}/>
+                        <span  className="ms-3 w-100">{ video?.snippet?.title }</span>
+                    </li>
+                ) ) }
+                <Link to="/feed/subscription" style={{textDecoration : "none", color : "inherit"}}>
+                    <li className="d-flex align-items-center">
+                        <MdFormatListBulleted  size={23}/>
+                        <span className="ms-3">All Subscriptions</span>
+                    </li>
+                </Link>
 
                 <hr></hr>
 

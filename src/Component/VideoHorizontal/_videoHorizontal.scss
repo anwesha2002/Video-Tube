@@ -1,19 +1,20 @@
 @import '../../base.scss';
 
 .videoHorizontal {
-  border-bottom: 0.3px solid $border-color;
+  //border-bottom: 0.3px solid $border-color;
 
   cursor: pointer;
 
-  &__left {
+  &_left {
     position: relative;
     text-align: center;
     padding-left: 0 !important;
   }
 
-  &__thumbnail {
+  &_thumbnail {
     width: 100%;
-    &-channel {
+    z-index: 8;
+    &_channel {
       width: 50%;
       border-radius: 50%;
     }
@@ -23,7 +24,7 @@
     }
   }
 
-  &__duration {
+  &_duration {
     position: absolute;
 
     bottom: 0.6rem;
@@ -35,11 +36,11 @@
     border-radius: 3px;
   }
 
-  &__details {
+  &_details {
     font-size: 0.9rem;
   }
 
-  &__title {
+  &_title {
     font-size: 0.95rem;
 
     // color: #fff;
@@ -47,12 +48,12 @@
 
     @include line-clamp(2);
   }
-  &__desc {
+  &_desc {
     @include line-clamp(2);
-    font-size: 0.9rem;
+    font-size: 0.7rem;
   }
 
-  &__channel {
+  &_channel {
     img {
       width: 36px;
       height: 36px;
@@ -61,10 +62,10 @@
       margin-right: 0.5rem;
       cursor: pointer;
     }
-    p {
-      font-size: 0.9rem;
+
+      font-size: 0.8rem;
       @include line-clamp(1);
-    }
+
   }
 }
 
@@ -72,10 +73,10 @@
   .videoHorizontal {
     font-size: 0.8rem;
 
-    &__details {
+    &_details {
       @include line-clamp(1);
     }
-    &__channel {
+    &_channel {
       margin: 0.1rem 0;
 
       img {
@@ -86,11 +87,11 @@
       }
     }
 
-    &__desc {
+    &_desc {
       display: none;
     }
 
-    &__title {
+    &_title {
       font-size: 0.9rem;
       @include line-clamp(1);
     }

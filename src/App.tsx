@@ -12,6 +12,8 @@ import {Navigate , Route , Router , Routes , useNavigate} from "react-router-dom
 import {LoginScreen} from "./Screen/LoginScreen/LoginScreen.tsx";
 import {PrivateRoute} from "./Component/PrivateRoute/privateRoute.tsx";
 import {WatchScreen} from "./Screen/WatchScreen/WatchScreen.tsx";
+import {SearchScreen} from "./Screen/SearchScreen/SearchScreen.tsx";
+import {Subscription} from "./Screen/Subscription/Subscription.tsx";
 
 function App() {
   const [count, setCount] = useState(0)
@@ -27,7 +29,27 @@ function App() {
             </PrivateRoute>
         }></Route>
         <Route path="/auth" element={<LoginScreen/>}></Route>
-        <Route path="/watch/:id" element={<WatchScreen/>}></Route>
+        <Route path="/watch/:id" element={
+            <PrivateRoute>
+                <Home>
+                    <WatchScreen/>
+                </Home>
+            </PrivateRoute>
+        }></Route>
+        <Route path="/search/:query" element={
+            <PrivateRoute>
+                <Home>
+                    <SearchScreen/>
+                </Home>
+            </PrivateRoute>
+        }></Route>
+        <Route path="/feed/subscription" element={
+            <PrivateRoute>
+                <Home>
+                    <Subscription/>
+                </Home>
+            </PrivateRoute>
+        }></Route>
         <Route path="*" element={
             <PrivateRoute>
                 <Home>
