@@ -7,7 +7,7 @@ import {useAppDispatch , useAppSelector} from "../redux/store.ts";
 // import {getVideosByKeyword , getyoutubeVideos} from "../redux/videoSlice.ts";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {SkeletonVideo} from "../Component/Skeleton/SkeletonVideo.tsx";
-import {getVideosByKeyword , getyoutubeVideos} from "../Data/fetchApi.ts";
+import {getyoutubeVideosThunk , getVideosByKeywordThunk} from "../redux/videoSlice.ts";
 
 export function HomeScreen(){
 
@@ -49,23 +49,23 @@ export function HomeScreen(){
 
 
     useEffect ( () => {
-        // dispatch(getyoutubeVideos())
+        dispatch(getyoutubeVideosThunk())
 
-        getyoutubeVideos().then(()=>{})
+        // getyoutubeVideos().then(()=>{})
     } , [dispatch] );
 
 
     const fetData = () => {
         if(activeCategory === 'All') {
-            // dispatch(getyoutubeVideos())
+            dispatch(getyoutubeVideosThunk())
 
-            getyoutubeVideos().then(()=>{})
+            // getyoutubeVideos().then(()=>{})
         }
         else {
             console.log(JSON.parse(category))
-            // dispatch(getVideosByKeyword({ keyword: JSON.parse(category) }))
+            dispatch(getVideosByKeywordThunk({ keyword: JSON.parse(category) }))
 
-            getVideosByKeyword({ keyword: JSON.parse(category) }).then(()=>{})
+            // getVideosByKeyword({ keyword: JSON.parse(category) }).then(()=>{})
         }
 
     }

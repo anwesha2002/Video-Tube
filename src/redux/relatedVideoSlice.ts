@@ -1,5 +1,5 @@
 import {createAsyncThunk , createSlice} from "@reduxjs/toolkit";
-import {FetchApi} from "../Data/fetchApi.ts";
+import { getReletedVideos} from "../Data/fetchApi.ts";
 
 
 interface relatedVideosState {
@@ -14,7 +14,7 @@ const initialState : relatedVideosState = {
     loading : false,
     error : null,
 }
-export const getReletedVideos = createAsyncThunk<
+export const getReletedVideosTHunk = createAsyncThunk<
     {relatedVideos  : any[]},
     {id : string },
     {rejectValue : string}
@@ -22,20 +22,10 @@ export const getReletedVideos = createAsyncThunk<
     'relatedVideos/getRelatedVideos',
     async ({ id } , {rejectWithValue, getState}) => {
         try {
-            const res = await FetchApi("/search",{
-                params : {
-                    part: 'snippet',
-                    id:id,
-                    maxResults: 20,
-                    type : 'video'
-                },
-                // headers:{
-                //     Authorization : `Bearer ${getState().auth.accessToken}`
-                // }
-            })
+            const res = await getReletedVideos(id)
 
-            console.log(res.data)
-            return { relatedVideos : res.data.items }
+            console.log(res)
+            return { relatedVideos : res.items }
         }catch (error){
             return rejectWithValue(error.response.data)
         }
@@ -52,18 +42,18 @@ export const relatedVieos = createSlice({
     },
     extraReducers : (builder) =>{
         builder
-            .addCase(getReletedVideos.pending,(state : relatedVideosState)=>{
+            .addCase(getReletedVideosTHunk.pending,(state : relatedVideosState)=>{
                 state.loading = true
                 state.error = null
                 // state.activeCategory = action.meta.arg.keyword
             })
-            .addCase(getReletedVideos.fulfilled,(state : relatedVideosState, action)=>{
+            .addCase(getReletedVideosTHunk.fulfilled,(state : relatedVideosState, action)=>{
                 state.loading = false
                 state.error = null
                 state.relatedVideos = action.payload.relatedVideos
                 // state.activeCategory = action.meta.arg.keyword
             })
-            .addCase(getReletedVideos.rejected,(state : relatedVideosState, action)=>{
+            .addCase(getReletedVideosTHunk.rejected,(state : relatedVideosState, action)=>{
                 state.loading = false
                 state.error = action.payload || 'loading false'
                 // state.activeCategory = action.meta.arg.keyword

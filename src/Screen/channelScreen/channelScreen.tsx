@@ -7,7 +7,8 @@ import {Col , Container , Row} from "react-bootstrap";
 import Skeleton , {SkeletonTheme} from "react-loading-skeleton";
 import {Video} from "../../Component/Video/video.tsx";
 import "./_channlScreen.scss"
-import {channelBYID , getVideosByChannel} from "../../Data/fetchApi.ts";
+import {channelBYID } from "../../Data/fetchApi.ts";
+import {channelBYIDThunk , getVideosByChannelThunk} from "../../redux/channelSclice.ts";
 
 export function ChannelScreen() {
     const { channelId } = useParams()
@@ -16,11 +17,11 @@ export function ChannelScreen() {
 
 
     useEffect ( () => {
-        // dispatch(getVideosByChannel({id : channelId}))
-        // dispatch(channelBYID({id : channelId}))
+        dispatch(getVideosByChannelThunk({id : channelId}))
+        dispatch(channelBYIDThunk({id : channelId}))
 
-        getVideosByChannel({id : channelId}).then(()=>{})
-        channelBYID({id : channelId}).then(()=>{})
+        // getVideosByChannel({id : channelId}).then(()=>{})
+        // channelBYID({id : channelId}).then(()=>{})
     } , [channelId, dispatch] );
 
     const { channelVideos, loading } = useAppSelector(state => state.channel)

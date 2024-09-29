@@ -1,6 +1,4 @@
 import axios from "axios";
-import {getsubscriptions} from "../redux/subscriptionsSlice.ts";
-import {searchVideosByKeyword} from "../redux/searchVideoSlice.ts";
 
 export const FetchApi  = axios.create({
         baseURL:"https://youtube.googleapis.com/youtube/v3",
@@ -9,92 +7,223 @@ export const FetchApi  = axios.create({
         }
     })
 
-export async function getyoutubeVideos(){
+export async function getyoutubeVideos(getState){
     try {
+        const res = await FetchApi("/videos",{
+            params : {
+                part: 'snippet,contentDetails,statistics',
+                chart: 'mostPopular',
+                regionCode: 'IN',
+                maxResults: 20,
+                pageToken: getState().homeVideos.nextPageToken,
+            }
+        })
         await console.log("get all videos")
+        return res.data
     }catch (error){
-        console.log(error)
+        return error
     }
 }
 
-export async function getVideosByKeyword({keyword } : {keyword : string}){
+export async function getVideosByKeyword( keyword : string, getState ){
     try {
+        const res = await FetchApi("/search",{
+            params : {
+                part: 'snippet',
+                q:keyword,
+                maxResults: 20,
+                pageToken: getState().homeVideos.nextPageToken,
+                type : 'video'
+            }
+        })
         await console.log(`get videos by keyword ${keyword}` )
+        return res.data
     }catch (error){
-        console.log(error)
+        return error
     }
 }
 
-export async function getsubscriptions(){
+export async function getsubscriptions(getState){
     try {
+        const res = await FetchApi("/subscriptions",{
+            params : {
+                part : 'snippet,contentDetails',
+                mine: true,
+            },
+            headers:{
+                Authorization : `Bearer ${getState().auth.accessToken}`
+            }
+        })
         await console.log("get all scriptions" )
+        return res.data
     }catch (error){
-        console.log(error)
+        return error
     }
 }
 
-export async function getVideosById({id} :{id : string | undefined }){
+export async function getVideosById(id : string  ){
     try {
+        const res = await FetchApi("/videos",{
+            params:{
+                part : 'snippet,contentDetails,statistics',
+                id : id
+            }
+        })
         await console.log("get Videos By Id : " , id )
+        return res.data
     }catch (error){
-        console.log(error)
+        return error
     }
 }
 
-export async function searchVideosByKeyword({keyword } : {keyword : string | undefined}){
+export async function searchVideosByKeyword(keyword : string | undefined){
     try {
+        const res = await FetchApi("/search",{
+            params : {
+                part: 'snippet',
+                maxResults: 20,
+                q: keyword,
+                type: 'video,channel',
+            }
+        })
         await console.log("search Videos By Keyword : " , keyword )
+        return res.data
     }catch (error){
-        console.log(error)
+        return  error
     }
 }
 
-export async function getReletedVideos({id} :{id : string | undefined }){
+export async function getReletedVideos(id : string | undefined ){
     try {
+        const res = await FetchApi("/search",{
+            params : {
+                part: 'snippet',
+                id:id,
+                maxResults: 20,
+                type : 'video'
+            },
+            // headers:{
+            //     Authorization : `Bearer ${getState().auth.accessToken}`
+            // }
+        })
         await console.log("get Releted Videos : " , id )
+        return res.data
     }catch (error){
-        console.log(error)
+        return error
     }
 }
 
-export async function GetComments({id} :{id : string | undefined }){
+export async function GetComments(id : string | undefined ){
     try {
+        const res = await FetchApi("/commentThreads",{
+            params : {
+                part : 'snippet',
+                videoId : id
+            }
+        })
         await console.log("get all Comments : " , id )
+        return res.data
     }catch (error){
-        console.log(error)
+        return error
     }
 }
 
-export async function postComments({id, text} : {id? : string, text : string}){
+export async function postComments(text : string, getState ,id : string,  ){
+
+    const obj = {
+        "snippet" : {
+            "videoId": id,
+            "topLevelComment":{
+                "snippet":{
+                    "textOriginal" : text
+                }
+            }
+        }
+    }
+
     try {
+        await FetchApi.post("/commentThreads",obj,{
+            params:{
+                part : 'snippet'
+            },
+            headers:{
+                Authorization : `Bearer ${getState().auth.accessToken}`,
+                // Accept: 'application/json',
+            }
+        })
+        console.log(obj)
+
         await console.log("post Comments : " , id )
         await console.log("text : " , text )
     }catch (error){
-        console.log(error)
+        return error
     }
 }
 
-export async function channelBYID({id} : {id : string | undefined}){
+export async function channelBYID(id : string | undefined){
     try {
+        const res = await FetchApi("/channels",{
+            params : {
+                part : 'snippet,contentDetails,statistics',
+                id
+            }
+        })
         await console.log("get channel By Id : " , id )
+        return res.data
     }catch (error){
-        console.log(error)
+        return error
     }
 }
 
-export async function SubStat({channelID} : {channelID : string}){
+export async function SubStat(channelID : string, getState){
     try {
+        const res = await FetchApi("/subscriptions",{
+            params : {
+                part : 'snippet',
+                forChannelId : channelID,
+                mine: true,
+            },
+            headers:{
+                Authorization : `Bearer ${getState().auth.accessToken}`
+            }
+        })
         await console.log("subscription status  : " , channelID )
+        return res.data
     }catch (error){
-        console.log(error)
+        return error
     }
 }
 
-export async function getVideosByChannel({id} : {id : string | undefined}){
+export const getUploadPlayListID = async ( id : string )=>{
     try {
-        await console.log("get videos By Channel  : " , id )
+        const res = await FetchApi("/channels",{
+            params : {
+                part: 'contentDetails',
+                id: id,
+            }
+        })
+
+        return  res.data
     }catch (error){
-        console.log(error)
+        return error
+    }
+}
+
+export async function getVideosByChannel(uploadPlaylistId : string | undefined){
+    try {
+        const channelres = await FetchApi("/playlistItems",{
+            params : {
+                part: 'snippet,contentDetails',
+                playlistId: uploadPlaylistId,
+                maxResults: 30,
+            }
+        })
+
+        await console.log("get videos By Channel  : " , uploadPlaylistId )
+
+        return channelres.data
+    }catch (error){
+        return error
     }
 }
 

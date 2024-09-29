@@ -1,8 +1,7 @@
 import {useEffect , useState} from "react";
 import "./_categoryBar.scss"
 import {useAppDispatch} from "../../redux/store.ts";
-import {getVideosByKeyword , getyoutubeVideos} from "../../Data/fetchApi.ts";
-// import {getVideosByKeyword , getyoutubeVideos} from "../../redux/videoSlice.ts";
+import {getVideosByKeywordThunk , getyoutubeVideosThunk} from "../../redux/videoSlice.ts";
 
 const keywords = [
     'All',
@@ -27,7 +26,7 @@ const keywords = [
 export function CategoryBar(){
 
     const[activeElement, setActiveElement] = useState('All')
-    // const dispatch = useAppDispatch()
+    const dispatch = useAppDispatch()
 
 
 
@@ -35,12 +34,12 @@ export function CategoryBar(){
         setActiveElement(value)
         sessionStorage.setItem("keyword" , JSON.stringify(value))
         if (value === 'All') {
-            // dispatch(getyoutubeVideos())
-            getyoutubeVideos().then(()=>{})
+            dispatch(getyoutubeVideosThunk())
+            // getyoutubeVideos().then(()=>{})
         }
         else {
-            // dispatch(getVideosByKeyword({ keyword: value }))
-            getVideosByKeyword({ keyword: value }).then(()=>{})
+            dispatch(getVideosByKeywordThunk({ keyword: value }))
+            // getVideosByKeyword({ keyword: value }).then(()=>{})
         }
         console.log(value)
     }

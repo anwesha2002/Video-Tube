@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import {lazy , Suspense , useState} from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -20,7 +20,11 @@ function App() {
   const [count, setCount] = useState(0)
     const navigate= useNavigate()
 
+
+    // const { WatchScreen } = React.lazy(() => import('./Screen/WatchScreen/WatchScreen.tsx'));
+
   return (
+      <Suspense fallback={ "Lazy loading pages ..." }>
     <Routes>
         <Route path="/" element={
             <PrivateRoute>
@@ -67,6 +71,7 @@ function App() {
         }></Route>
       {/*<Home/>*/}
     </Routes>
+      </Suspense>
   )
 }
 

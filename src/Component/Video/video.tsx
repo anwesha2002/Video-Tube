@@ -6,7 +6,7 @@ import moment from 'moment'
 import numeral from 'numeral'
 import {useEffect , useState} from "react";
 import {FetchApi} from "../../Data/fetchApi.ts";
-import {useNavigate} from "react-router-dom";
+import {Link , useNavigate} from "react-router-dom";
 
 export function Video({item, channelScreen}){
 
@@ -66,27 +66,29 @@ export function Video({item, channelScreen}){
 
 
     return(
-        <div className='video' onClick={handleClick}>
-            <div className='video__top'>
-                 <img src="https://i.ytimg.com/vi/mpKKcqWnTus/default.jpg" alt='' />
-                {/*<LazyLoadImage src={medium.url} effect='blur' />*/}
-                <span className='video__top__duration'>{_duration}</span>
-            </div>
-            <div className='video__title'>{title}</div>
-            <div className='video__details'>
-            <span>
-               <AiFillEye /> {numeral(views).format('0.a')} Views • {'  '}
-            </span>{'  '}
-                <span> {moment(publishedAt).fromNow()} </span>
-            </div>
-            {!channelScreen && (
-                <div className='video__channel'>
-                    {/*<LazyLoadImage src={channelIcon?.url} effect='blur' />*/}
-                    <img src={channelIcon?.url} effect='blur' />
-
-                    <p>{channelTitle}</p>
+        <Link to={`watch/${_videoId}`}>
+            <div className='video' >
+                <div className='video__top'>
+                     <img src="https://i.ytimg.com/vi/mpKKcqWnTus/default.jpg" alt='' />
+                    {/*<LazyLoadImage src={medium.url} effect='blur' />*/}
+                    <span className='video__top__duration'>{_duration}</span>
                 </div>
-            )}
-        </div>
+                <div className='video__title'>{title}</div>
+                <div className='video__details'>
+                <span>
+                   <AiFillEye /> {numeral(views).format('0.a')} Views • {'  '}
+                </span>{'  '}
+                    <span> {moment(publishedAt).fromNow()} </span>
+                </div>
+                {!channelScreen && (
+                    <div className='video__channel'>
+                        {/*<LazyLoadImage src={channelIcon?.url} effect='blur' />*/}
+                        <img src={channelIcon?.url} effect='blur' />
+
+                        <p>{channelTitle}</p>
+                    </div>
+                )}
+            </div>
+        </Link>
     )
 }

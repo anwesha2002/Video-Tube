@@ -1,6 +1,5 @@
 import {createAsyncThunk , createSlice , PayloadAction} from "@reduxjs/toolkit";
-import {FetchApi} from "../Data/fetchApi.ts";
-import {getVideosByKeyword} from "./videoSlice.ts";
+import { getsubscriptions} from "../Data/fetchApi.ts";
 
 interface subscriptionsState {
     subscriptions : any[],
@@ -19,24 +18,16 @@ const initialState : subscriptionsState = {
     // activeCategory : 'All'
 }
 
-export const getsubscriptions = createAsyncThunk<
+export const getsubscriptionsThunk = createAsyncThunk<
     {subscriptions : any[]},
     void,
     {rejectValue : string}
 >(
     'subscription/getsubscriptions',async (_,{rejectWithValue, getState}) => {
         try {
-            const res = await FetchApi("/subscriptions",{
-                params : {
-                    part : 'snippet,contentDetails',
-                    mine: true,
-                },
-                headers:{
-                    Authorization : `Bearer ${getState().auth.accessToken}`
-                }
-            })
-            console.log(res.data.items)
-            return {subscriptions : res.data.items}
+            const res = await getsubscriptions(getState)
+            console.log(res.items)
+            return {subscriptions : res.items}
         }catch (error){
             return rejectWithValue(error.response.data)
         }
@@ -54,18 +45,18 @@ export const subscriptionSliceStore = createSlice({
     },
     extraReducers:(builder) => {
         builder
-            .addCase(getsubscriptions.fulfilled,(state : subscriptionsState, action)=>{
+            .addCase(getsubscriptionsThunk.fulfilled,(state : subscriptionsState, action)=>{
                 state.loading = false
                 state.subscriptions =   action.payload.subscriptions
                 // state.nextPageToken = action.payload.nextPageToken
                 state.error = null
                 // state.activeCategory = 'All'
             })
-            .addCase(getsubscriptions.rejected,(state : subscriptionsState, action : PayloadAction<string | undefined>)=>{
+            .addCase(getsubscriptionsThunk.rejected,(state : subscriptionsState, action : PayloadAction<string | undefined>)=>{
                 state.loading = false
                 state.error = action.payload || 'Login failed'
             })
-            .addCase(getsubscriptions.pending,(state : subscriptionsState)=>{
+            .addCase(getsubscriptionsThunk.pending,(state : subscriptionsState)=>{
                 state.loading = true
                 state.error = null
                 // state.activeCategory = 'All'

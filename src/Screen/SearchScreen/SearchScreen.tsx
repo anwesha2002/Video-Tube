@@ -5,7 +5,7 @@ import {useAppDispatch , useAppSelector} from "../../redux/store.ts";
 import {Container} from "react-bootstrap";
 import {VideoHorizontal} from "../../Component/VideoHorizontal/VideoHorizontal.tsx";
 import Skeleton , {SkeletonTheme} from "react-loading-skeleton";
-import {searchVideosByKeyword} from "../../Data/fetchApi.ts";
+import {searchVideosByKeywordThunk} from "../../redux/searchVideoSlice.ts";
 
 export function SearchScreen() {
 
@@ -17,8 +17,8 @@ export function SearchScreen() {
     console.log("query" , query)
 
     useEffect ( () => {
-        // dispatch(searchVideosByKeyword( {keyword : query }))
-        searchVideosByKeyword( {keyword : query }).then(()=>{})
+        dispatch(searchVideosByKeywordThunk( {keyword : query }))
+        // searchVideosByKeyword( {keyword : query }).then(()=>{})
 
         query?.trim() !== "" && setSearchResult(true)
     } , [dispatch,query] );

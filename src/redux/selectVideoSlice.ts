@@ -1,5 +1,5 @@
 import {createAsyncThunk , createSlice} from "@reduxjs/toolkit";
-import {FetchApi} from "../Data/fetchApi.ts";
+import { getVideosById} from "../Data/fetchApi.ts";
 
 
 interface ItemState {
@@ -19,7 +19,7 @@ const initialState : ItemState = {
     // activeCategory : 'All'
 }
 
-export const getVideosById = createAsyncThunk<
+export const getVideosByIdThunk = createAsyncThunk<
     { videos: any[]},
     {id : string },
     {rejectValue : string}
@@ -27,13 +27,8 @@ export const getVideosById = createAsyncThunk<
     'yt_select_video/getByID',
     async ({id}, { rejectWithValue }) => {
         try {
-            const res = await FetchApi("/videos",{
-                params:{
-                    part : 'snippet,contentDetails,statistics',
-                    id : id
-                }
-            })
-            return {videos : res.data.items[0] }
+            const res = await getVideosById(id)
+            return {videos : res.items[0] }
         }catch (error){
             return rejectWithValue(error.message)
         }
@@ -50,16 +45,16 @@ export const selectVideoSliceStore = createSlice( {
     },
     extraReducers : (builder) => {
         builder
-            .addCase(getVideosById.pending,(state: ItemState)=>{
+            .addCase(getVideosByIdThunk.pending,(state: ItemState)=>{
                 state.loading = true
                 state.error = null
             })
-            .addCase(getVideosById.fulfilled,(state: ItemState, action)=>{
+            .addCase(getVideosByIdThunk.fulfilled,(state: ItemState, action)=>{
                 state.loading = false
                 state.videos = action.payload.videos
                 state.error = null
             })
-            .addCase(getVideosById.rejected,(state: ItemState, action)=>{
+            .addCase(getVideosByIdThunk.rejected,(state: ItemState, action)=>{
                 state.loading = false
                 state.error = action.payload || 'video does not exist'
             })

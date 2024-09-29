@@ -4,7 +4,6 @@ import {AiFillEye} from "react-icons/ai";
 import moment from "moment";
 import numeral from "numeral";
 import {useEffect , useState} from "react";
-import {FetchApi} from "../../Data/fetchApi.ts";
 import {redirect , replace , useNavigate} from "react-router-dom";
 
 export function VideoHorizontal({videos, searchScreen, searchresult, subScreen}){

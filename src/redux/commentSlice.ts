@@ -1,6 +1,5 @@
 import {createAsyncThunk , createSlice} from "@reduxjs/toolkit";
-import {FetchApi} from "../Data/fetchApi.ts";
-import {channelBYID , SubStat} from "./channelSclice.ts";
+import { GetComments , postComments} from "../Data/fetchApi.ts";
 
 interface commentType {
     loading : boolean,
@@ -16,57 +15,32 @@ const initialState : commentType = {
     token :  null
 }
 
-export const GetComments = createAsyncThunk<
+export const GetCommentsThunk = createAsyncThunk<
     {comments : any},
     {id : string},
     {rejectValue : string}
 >(
     'comment/getComments',async ({id},{rejectWithValue, getState}) => {
         try {
-            const res = await FetchApi("/commentThreads",{
-                params : {
-                    part : 'snippet',
-                    videoId : id
-                }
-            })
+            const res = await GetComments(id)
             console.log(getState().auth.accessToken)
-            return {comments : res.data.items}
+            return {comments : res.items}
         }catch (error){
             return rejectWithValue(error.message)
         }
     }
 )
 
-export const postComments = createAsyncThunk<
+export const postCommentsThunk = createAsyncThunk<
     {},
     {id? : string, text : string},
     {rejectValue : string}
 >(
     'comment/postComments', async ({id, text}, {rejectWithValue, getState, dispatch})=>{
-
-        const obj = {
-            "snippet" : {
-                "videoId": id,
-                "topLevelComment":{
-                    "snippet":{
-                        "textOriginal" : text
-                    }
-                }
-            }
-        }
-
         try {
-            await FetchApi.post("/commentThreads",obj,{
-                params:{
-                    part : 'snippet'
-                },
-                headers:{
-                    Authorization : `Bearer ${getState().auth.accessToken}`,
-                    // Accept: 'application/json',
-                }
-            })
-            console.log(obj)
-            setTimeout(()=>dispatch(GetComments( { id : id })), 3000)
+            await postComments(text, getState, id)
+
+            setTimeout(()=>dispatch(GetCommentsThunk( { id : id })), 3000)
             // console.log(getState().auth?.accessToken)
             return
         }catch (error){
@@ -85,28 +59,28 @@ export const commentSlice = createSlice({
     },
     extraReducers:(builder) => {
         builder
-            .addCase(GetComments.pending,(state : commentType)=>{
+            .addCase(GetCommentsThunk.pending,(state : commentType)=>{
                 state.loading = true
                 state.error = null
             })
-            .addCase(GetComments.fulfilled, (state :commentType, action)=>{
+            .addCase(GetCommentsThunk.fulfilled, (state :commentType, action)=>{
                 state.loading = false
                 state.error = null
                 state.comments = action.payload.comments
             })
-            .addCase(GetComments.rejected, (state :commentType, action)=>{
+            .addCase(GetCommentsThunk.rejected, (state :commentType, action)=>{
                 state.loading = false
                 state.error = action.payload || 'comments not found'
             })
-            .addCase(postComments.rejected, (state :commentType, action)=>{
+            .addCase(postCommentsThunk.rejected, (state :commentType, action)=>{
                 state.loading = false
                 state.error = action.payload || 'comments not found'
             })
-            .addCase(postComments.fulfilled, (state :commentType)=>{
+            .addCase(postCommentsThunk.fulfilled, (state :commentType)=>{
                 state.loading = false
                 state.error = null
             })
-            .addCase(postComments.pending, (state :commentType)=>{
+            .addCase(postCommentsThunk.pending, (state :commentType)=>{
                 state.loading = true
                 state.error = null
             })

@@ -1,6 +1,5 @@
 import {createAsyncThunk , createSlice , PayloadAction} from "@reduxjs/toolkit";
-import {FetchApi} from "../Data/fetchApi.ts";
-import {getVideosByKeyword , getyoutubeVideos} from "./videoSlice.ts";
+import { searchVideosByKeyword} from "../Data/fetchApi.ts";
 
 interface searchState {
     videos : any[],
@@ -17,7 +16,7 @@ const initialState : searchState = {
     error : null,
 }
 
-export const searchVideosByKeyword = createAsyncThunk<
+export const searchVideosByKeywordThunk = createAsyncThunk<
     {videos  : any[]},
     {keyword : string },
     {rejectValue : string}
@@ -25,17 +24,10 @@ export const searchVideosByKeyword = createAsyncThunk<
     'searchvideo/searchVideosByKeyword',
     async ({ keyword } , {rejectWithValue}) => {
         try {
-            const res = await FetchApi("/search",{
-                params : {
-                    part: 'snippet',
-                    maxResults: 20,
-                    q: keyword,
-                    type: 'video,channel',
-                }
-            })
+            const res = await searchVideosByKeyword(keyword)
             console.log('keyword',keyword)
             // console.log('keyword',res.data.items)
-            return { videos : res.data.items }
+            return { videos : res.items }
         }catch (error){
             return rejectWithValue(error.message)
         }
@@ -52,18 +44,18 @@ export const searchVideoStore = createSlice({
     },
     extraReducers:(builder) => {
         builder
-            .addCase(searchVideosByKeyword.fulfilled,(state : searchState, action)=>{
+            .addCase(searchVideosByKeywordThunk.fulfilled,(state : searchState, action)=>{
                 state.loading = false
                 state.error = null
                 state.videos = action.payload.videos
             })
-            .addCase(searchVideosByKeyword.rejected,(state : searchState, action)=>{
+            .addCase(searchVideosByKeywordThunk.rejected,(state : searchState, action)=>{
                 state.loading = false
                 state.error = action.payload || 'Login failed'
                 // state.activeCategory = 'All'
                 // console.log(action.payload.activeCategory)
             })
-            .addCase(searchVideosByKeyword.pending,(state : searchState)=>{
+            .addCase(searchVideosByKeywordThunk.pending,(state : searchState)=>{
                 state.loading = true
                 state.error = null
                 // state.activeCategory = action.meta.arg.keyword

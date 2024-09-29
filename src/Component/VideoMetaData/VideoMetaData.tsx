@@ -8,7 +8,7 @@ import {useEffect} from "react";
 // import {channelBYID , SubStat} from "../../redux/channelSclice.ts";
 import {FaBell} from "react-icons/fa";
 import {AiOutlineBell} from "react-icons/ai";
-import {channelBYID , SubStat} from "../../Data/fetchApi.ts";
+import {channelBYIDThunk , SubStatThunk} from "../../redux/channelSclice.ts";
 
 type videoMetadataProps = {
     video? : any
@@ -26,11 +26,11 @@ export function VideoMetaData({video ,videoID} : videoMetadataProps) {
         const { viewCount, likeCount, dislikeCount } = statistics
 
     useEffect ( () => {
-        // dispatch(channelBYID({id : channelId}))
-        // dispatch(SubStat({channelID : channelId}))
+        dispatch(channelBYIDThunk({id : channelId}))
+        dispatch(SubStatThunk({channelID : channelId}))
 
-        channelBYID({id : channelId}).then(()=>{})
-        SubStat({channelID : channelId}).then(()=>{})
+        // channelBYID({id : channelId}).then(()=>{})
+        // SubStat({channelID : channelId}).then(()=>{})
     } , [dispatch, channelId] );
 
     const { channel, subscriptionStatus } = useAppSelector(state => state.channel)

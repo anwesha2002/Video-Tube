@@ -1,5 +1,5 @@
 import {createAsyncThunk , createSlice , PayloadAction} from "@reduxjs/toolkit";
-import {FetchApi} from "../Data/fetchApi.ts";
+import { getVideosByKeyword , getyoutubeVideos} from "../Data/fetchApi.ts";
 
 
 interface ItemState {
@@ -19,7 +19,7 @@ const initialState : ItemState = {
     activeCategory : 'All'
 }
 
-export const getyoutubeVideos = createAsyncThunk<
+export const getyoutubeVideosThunk = createAsyncThunk<
     {videos  : any[],nextPageToken  : string, activeCategory : string},
     void,
     {rejectValue : string}
@@ -27,24 +27,16 @@ export const getyoutubeVideos = createAsyncThunk<
     'yt_video/getvideos',
     async (_, {rejectWithValue, getState}) => {
         try {
-            const res = await FetchApi("/videos",{
-                params : {
-                    part: 'snippet,contentDetails,statistics',
-                    chart: 'mostPopular',
-                    regionCode: 'IN',
-                    maxResults: 20,
-                    pageToken: getState().homeVideos.nextPageToken,
-                }
-            })
+            const res  = await getyoutubeVideos(getState)
             // console.log(res.data.items)
-            return { videos : res.data.items, nextPageToken : res.data.nextPageToken , activeCategory : getState().homeVideos.activeCategory}
+            return { videos : res.items, nextPageToken : res.nextPageToken , activeCategory : getState().homeVideos.activeCategory}
         }catch (error){
             return rejectWithValue(error.message)
         }
     }
 )
 
-export const getVideosByKeyword = createAsyncThunk<
+export const getVideosByKeywordThunk = createAsyncThunk<
     {videos  : any[],nextPageToken  : string, activeCategory : string},
     {keyword : string },
     {rejectValue : string}
@@ -52,18 +44,10 @@ export const getVideosByKeyword = createAsyncThunk<
     'yt_video/getvideosbykeyword',
     async ({ keyword } , {rejectWithValue,getState}) => {
         try {
-            const res = await FetchApi("/search",{
-                params : {
-                    part: 'snippet',
-                    q:keyword,
-                    maxResults: 20,
-                    pageToken: getState().homeVideos.nextPageToken,
-                    type : 'video'
-                }
-            })
+            const res = await getVideosByKeyword(keyword,getState)
             console.log('keyword',keyword)
             // console.log('keyword',res.data.items)
-            return { videos : res.data.items, nextPageToken : res.data.nextPageToken, activeCategory : keyword }
+            return { videos : res.items, nextPageToken : res.nextPageToken, activeCategory : keyword }
         }catch (error){
             return rejectWithValue(error.message)
         }
@@ -81,23 +65,23 @@ export const videoSliceStore = createSlice({
     },
     extraReducers:(builder) => {
        builder
-           .addCase(getyoutubeVideos.fulfilled,(state : ItemState, action)=>{
+           .addCase(getyoutubeVideosThunk.fulfilled,(state : ItemState, action)=>{
                state.loading = false
                state.videos =   [...state.videos , ...action.payload.videos]
                state.nextPageToken = action.payload.nextPageToken
                state.error = null
                state.activeCategory = 'All'
            })
-           .addCase(getyoutubeVideos.rejected,(state : ItemState, action : PayloadAction<string | undefined>)=>{
+           .addCase(getyoutubeVideosThunk.rejected,(state : ItemState, action : PayloadAction<string | undefined>)=>{
                state.loading = false
                state.error = action.payload || 'Login failed'
            })
-           .addCase(getyoutubeVideos.pending,(state : ItemState)=>{
+           .addCase(getyoutubeVideosThunk.pending,(state : ItemState)=>{
                state.loading = true
                state.error = null
                state.activeCategory = 'All'
            })
-           .addCase(getVideosByKeyword.fulfilled,(state : ItemState, action)=>{
+           .addCase(getVideosByKeywordThunk.fulfilled,(state : ItemState, action)=>{
                state.loading = false
                const prevValue = state.activeCategory;
                prevValue === action.payload.activeCategory ? state.videos = [...state.videos , ...action.payload.videos] : state.videos = action.payload.videos
@@ -107,13 +91,13 @@ export const videoSliceStore = createSlice({
                console.log(prevValue )
                state.activeCategory = action.payload.activeCategory
            })
-           .addCase(getVideosByKeyword.rejected,(state : ItemState, action)=>{
+           .addCase(getVideosByKeywordThunk.rejected,(state : ItemState, action)=>{
                state.loading = false
                state.error = action.payload || 'Login failed'
                // state.activeCategory = 'All'
                // console.log(action.payload.activeCategory)
            })
-           .addCase(getVideosByKeyword.pending,(state : ItemState)=>{
+           .addCase(getVideosByKeywordThunk.pending,(state : ItemState)=>{
                state.loading = true
                state.error = null
                // state.activeCategory = action.meta.arg.keyword

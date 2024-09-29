@@ -1,7 +1,5 @@
 import {createAsyncThunk , createSlice} from "@reduxjs/toolkit";
-import {createBootstrapComponent} from "react-bootstrap/ThemeProvider";
-import {FetchApi} from "../Data/fetchApi.ts";
-import {getVideosById} from "./selectVideoSlice.ts";
+import {channelBYID ,  getUploadPlayListID , getVideosByChannel , SubStat} from "../Data/fetchApi.ts";
 
 interface channelType {
     loading : boolean,
@@ -19,77 +17,52 @@ const initialState : channelType = {
     channelVideos : []
 }
 
-export const channelBYID = createAsyncThunk<
+export const channelBYIDThunk = createAsyncThunk<
     {channel : any},
     {id : string},
     {rejectValue : string}
 >(
     'channel/getChannel',async ({id},{rejectWithValue, getState}) => {
         try {
-            const res = await FetchApi("/channels",{
-                params : {
-                    part : 'snippet,contentDetails,statistics',
-                    id
-                }
-            })
-            return {channel : res.data.items[0]}
+            const res = await channelBYID(id)
+            return {channel : res.items[0]}
         }catch (error){
             return rejectWithValue(error.message)
         }
     }
 )
 
-export const SubStat = createAsyncThunk<
+export const SubStatThunk = createAsyncThunk<
     {subscriptionStatus : boolean},
     {channelID : string},
     {rejectValue : string}
 >(
     'channel/subStat',async ({channelID},{rejectWithValue, getState}) => {
         try {
-            const res = await FetchApi("/subscriptions",{
-                params : {
-                    part : 'snippet',
-                    forChannelId : channelID,
-                    mine: true,
-                },
-                headers:{
-                    Authorization : `Bearer ${getState().auth.accessToken}`
-                }
-            })
-            console.log(res.data.items)
-            return {subscriptionStatus : res.data.items.length !== 0}
+            const res = await SubStat(channelID, getState)
+            console.log(res.items)
+            return {subscriptionStatus : res.items.length !== 0}
         }catch (error){
             return rejectWithValue(error.response.data)
         }
     }
 )
 
-export const getVideosByChannel = createAsyncThunk<
+export const getVideosByChannelThunk = createAsyncThunk<
     {channelVideos : []},
     {id : string},
     {rejectValue : string}
 >(
     'channel/getVideosByChannel',async ({id},{rejectWithValue, getState}) => {
         try {
-            const res = await FetchApi("/channels",{
-                params : {
-                    part: 'contentDetails',
-                    id: id,
-                }
-            })
+            const res = await getUploadPlayListID(id)
 
-            const uploadPlaylistId = res.data.items[0].contentDetails.relatedPlaylists.uploads
+            const uploadPlaylistId = res.items[0].contentDetails.relatedPlaylists.uploads
 
-            const channelres = await FetchApi("/playlistItems",{
-                params : {
-                    part: 'snippet,contentDetails',
-                    playlistId: uploadPlaylistId,
-                    maxResults: 30,
-                }
-            })
-            console.log(channelres.data.items)
-            console.log(res.data.items)
-            return {channelVideos : channelres.data.items}
+            const channelres = await getVideosByChannel(uploadPlaylistId)
+            console.log(channelres.items)
+            console.log(res.items)
+            return {channelVideos : channelres.items}
         }catch (error){
             console.log(error.response.data)
             return rejectWithValue(error.response.data)
@@ -108,38 +81,38 @@ export const channelSlice = createSlice({
     },
     extraReducers:(builder) => {
         builder
-            .addCase(channelBYID.pending,(state : channelType)=>{
+            .addCase(channelBYIDThunk.pending,(state : channelType)=>{
                 state.loading = true
                 state.error = null
             })
-            .addCase(channelBYID.fulfilled, (state :channelType, action)=>{
+            .addCase(channelBYIDThunk.fulfilled, (state :channelType, action)=>{
                 state.loading = false
                 state.error = null
                 state.channel = action.payload.channel
             })
-            .addCase(channelBYID.rejected, (state :channelType, action)=>{
+            .addCase(channelBYIDThunk.rejected, (state :channelType, action)=>{
                 state.loading = false
                 state.error = action.payload || 'channel not found'
             })
-            .addCase(SubStat.fulfilled, (state :channelType, action)=>{
+            .addCase(SubStatThunk.fulfilled, (state :channelType, action)=>{
                 state.loading = false
                 state.error = null
                 state.subscriptionStatus = action.payload.subscriptionStatus
             })
-            .addCase(SubStat.rejected, (state :channelType, action)=>{
+            .addCase(SubStatThunk.rejected, (state :channelType, action)=>{
                 state.loading = false
                 state.error = action.payload || 'failed'
             })
-            .addCase(getVideosByChannel.pending,(state : channelType)=>{
+            .addCase(getVideosByChannelThunk.pending,(state : channelType)=>{
                 state.loading = true
                 state.error = null
             })
-            .addCase(getVideosByChannel.fulfilled, (state :channelType, action)=>{
+            .addCase(getVideosByChannelThunk.fulfilled, (state :channelType, action)=>{
                 state.loading = false
                 state.error = null
                 state.channelVideos = action.payload.channelVideos
             })
-            .addCase(getVideosByChannel.rejected, (state :channelType, action)=>{
+            .addCase(getVideosByChannelThunk.rejected, (state :channelType, action)=>{
                 state.loading = false
                 state.error = action.payload || 'videos not found'
             })

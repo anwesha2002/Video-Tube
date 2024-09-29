@@ -5,15 +5,15 @@ import {useEffect} from "react";
 import {Container} from "react-bootstrap";
 import {VideoHorizontal} from "../../Component/VideoHorizontal/VideoHorizontal.tsx";
 import Skeleton , {SkeletonTheme} from "react-loading-skeleton";
-import {getsubscriptions} from "../../Data/fetchApi.ts";
+import {getsubscriptionsThunk} from "../../redux/subscriptionsSlice.ts";
 
 export function Subscription() {
 
     const dispatch = useAppDispatch()
 
     useEffect ( () => {
-        // dispatch(getsubscriptions())
-        getsubscriptions().then(()=>{})
+        dispatch(getsubscriptionsThunk())
+        // getsubscriptions().then(()=>{})
     } , [dispatch] );
 
     const { subscriptions, loading } = useAppSelector(state => state.subscriptions)

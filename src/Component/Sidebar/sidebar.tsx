@@ -25,10 +25,12 @@ import {AiOutlineBulb} from "react-icons/ai";
 import {useAppDispatch , useAppSelector} from "../../redux/store.ts";
 import {logout} from "../../redux/authSlice.ts";
 import {Link} from "react-router-dom";
-import {useEffect} from "react";
+import {useEffect , useMemo , useState} from "react";
 // import {getsubscriptions} from "../../redux/subscriptionsSlice.ts";
 import {VideoHorizontal} from "../VideoHorizontal/VideoHorizontal.tsx";
-import {getsubscriptions} from "../../Data/fetchApi.ts";
+import {getsubscriptionsThunk} from "../../redux/subscriptionsSlice.ts";
+
+const cache = new Map();
 
 export function Sidebar({showSidebar}){
 
@@ -36,13 +38,23 @@ export function Sidebar({showSidebar}){
         window.scroll(0, 0); // reset the scroll position to the top left of the document.
     }
 
+    const [allSubs, setAllSubs] = useState<any>()
+
     const dispatch = useAppDispatch()
 
     useEffect ( () => {
-        // dispatch(getsubscriptions())
-        getsubscriptions().then(()=>{})
+
+        if (cache.has('cachedData')){
+            setAllSubs(cache.get('cachedData'))
+        }else {
+            dispatch(getsubscriptionsThunk())
+        }
     } , [dispatch] );
 
+    useEffect ( () => {
+        cache.set('cachedData', allSubs)
+    } , [allSubs] );
+    
     const { subscriptions, loading } = useAppSelector(state => state.subscriptions)
 
     return(
