@@ -12,9 +12,9 @@ import {store} from "./redux/store.ts";
 createRoot ( document.getElementById ( 'root' )! ).render (
     <Provider store={ store }>
         <BrowserRouter>
-            <StrictMode>
+            {/*<StrictMode>*/}
                 <App/>
-            </StrictMode>
+            {/*</StrictMode>*/}
         </BrowserRouter>
     </Provider>
 )

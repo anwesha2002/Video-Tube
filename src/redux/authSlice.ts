@@ -1,7 +1,7 @@
-import {createAsyncThunk , createSlice , PayloadAction} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {auth} from "../firebase.ts";
 import firebase from "firebase/compat/app";
-import {FetchApi} from "../Data/fetchApi.ts";
+
 // import {LOGIN_REQUEST , LOGIN_SUCCESS} from "./actionType.ts";
 
 

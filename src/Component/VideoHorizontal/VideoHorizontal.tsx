@@ -50,8 +50,8 @@ export function VideoHorizontal({videos, searchScreen, searchresult, subScreen})
             // setDuration(res.data.items[0].contentDetails.duration)
             // setViews(res.data.items[0].statistics.viewCount)
 
-            console.log("duration in video horizontal")
-            console.log("Views in video horizontal")
+            // console.log("duration in video horizontal")
+            // console.log("Views in video horizontal")
         })()
     } , [id, isVideo] );
 
@@ -65,11 +65,11 @@ export function VideoHorizontal({videos, searchScreen, searchresult, subScreen})
             // })
             // setChannelIcon(res.data.items[0].snippet.thumbnails.default)
 
-            console.log("ChannelIcon in video horizontal")
+            // console.log("ChannelIcon in video horizontal")
             // {subScreen &&
             //     setsubscriberCount ( res.data.items[0].statistics.subscriberCount )
             // }
-            console.log("subscriberCount in video horizontal")
+            // console.log("subscriberCount in video horizontal")
 
         })()
     } , [_channelId] );
@@ -86,7 +86,7 @@ export function VideoHorizontal({videos, searchScreen, searchresult, subScreen})
 
     const thumbnail = !isVideo && 'videoHorizontal_thumbnail_channel'
 
-    console.log(channelIcon)
+    // console.log(channelIcon)
 
     return (
         <Row className='py-2 m-1 videoHorizontal align-items-center' onClick={handleClick}>
