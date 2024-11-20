@@ -1,8 +1,10 @@
 import {createAsyncThunk , createSlice , PayloadAction} from "@reduxjs/toolkit";
-import { searchVideosByKeyword} from "../Data/fetchApi.ts";
+import {getDurationView , getIcon , searchVideosByKeyword} from "../Data/fetchApi.ts";
 
 interface searchState {
     videos : any[],
+    ViewsDuration :  any[],
+    channelIcons : any[],
     // nextPageToken : string | null,
     loading: boolean;
     error: string | null;
@@ -11,13 +13,15 @@ interface searchState {
 
 const initialState : searchState = {
     videos : [],
+    ViewsDuration : [],
+    channelIcons : [],
     loading : false,
     // nextPageToken : null,
     error : null,
 }
 
 export const searchVideosByKeywordThunk = createAsyncThunk<
-    {videos  : any[]},
+    {videos  : any[], ViewsDuration : any[], channelIcons : any[]},
     {keyword : string },
     {rejectValue : string}
 >(
@@ -25,9 +29,18 @@ export const searchVideosByKeywordThunk = createAsyncThunk<
     async ({ keyword } , {rejectWithValue}) => {
         try {
             const res = await searchVideosByKeyword(keyword)
+            const ids = []
+            const channelIDs = []
+            res.items.map((video)=> {
+                ids.push(video?.id?.videoId)
+                channelIDs.push(video?.snippet?.resourceId?.channelId || video?.snippet?.channelId)
+                // return {videoIds : video?.id?.videoId ||  video?.id || video?.contentDetails?.videoId}
+            })
+            const duration_and_Views = await getDurationView(ids.join(","))
+            const icons = await getIcon(channelIDs.join(","))
             console.log('keyword',keyword)
             // console.log('keyword',res.data.items)
-            return { videos : res.items }
+            return { videos : res.items, ViewsDuration : duration_and_Views, channelIcons : icons  }
         }catch (error){
             return rejectWithValue(error.message)
         }
@@ -48,6 +61,8 @@ export const searchVideoStore = createSlice({
                 state.loading = false
                 state.error = null
                 state.videos = action.payload.videos
+                state.ViewsDuration = action.payload.ViewsDuration
+                state.channelIcons = action.payload.channelIcons
             })
             .addCase(searchVideosByKeywordThunk.rejected,(state : searchState, action)=>{
                 state.loading = false

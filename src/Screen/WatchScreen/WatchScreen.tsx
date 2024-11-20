@@ -26,11 +26,11 @@ export function WatchScreen() {
         // getVideosById({id : id}).then(()=>{})
         // getReletedVideos({id : id}).then(()=>{})
         // dispatch(GetComments({id : id}))
-    } , [dispatch, id] );
+    } , [ id] );
 
     const { videos, loading } = useAppSelector(state => state.selectVideo)
 
-    const { relatedVideos, loading : relatedVideoLoading } = useAppSelector(state => state.relatedVideo)
+    const { relatedVideos, loading : relatedVideoLoading, ViewsDuration , channelIcons } = useAppSelector(state => state.relatedVideo)
 
     // const {comments} = useAppSelector(state => state.comment)
 
@@ -58,8 +58,8 @@ export function WatchScreen() {
             </Col>
             <Col lg={ 4 }>
                 {!loading ?
-                    relatedVideos?.map ( (video) => (
-                        <VideoHorizontal videos={video} key={video.id?.videoId} />
+                    relatedVideos?.map ( (video, index) => (
+                        <VideoHorizontal channelIcons={channelIcons[index]} viewsDuration={ViewsDuration[index]} videos={video} key={index} />
                         )
                 ) :
 

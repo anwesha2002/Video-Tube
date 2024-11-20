@@ -31,7 +31,7 @@ export function VideoMetaData({video ,videoID} : videoMetadataProps) {
 
         // channelBYID({id : channelId}).then(()=>{})
         // SubStat({channelID : channelId}).then(()=>{})
-    } , [dispatch, channelId] );
+    } , [ channelId] );
 
     const { channel, subscriptionStatus } = useAppSelector(state => state.channel)
 

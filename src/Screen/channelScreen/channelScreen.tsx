@@ -22,21 +22,22 @@ export function ChannelScreen() {
 
         // getVideosByChannel({id : channelId}).then(()=>{})
         // channelBYID({id : channelId}).then(()=>{})
-    } , [channelId, dispatch] );
+    } , [channelId] );
 
-    const { channelVideos, loading } = useAppSelector(state => state.channel)
+    const { channelVideos, loading, duration , channelIcon  } = useAppSelector(state => state.channel)
     const { channel } = useAppSelector(state => state.channel)
 
-    const {snippet} = channelVideos
+    const {snippet} = channel
     const { statistics} = channel
 
+    console.log(duration)
 
 
     return (
         <>
             <div className='px-5 py-2 my-2 d-flex justify-content-between align-items-center channelHeader'>
-                <div className='d-flex align-items-center'>
-                    <img src={snippet?.thumbnails?.default?.url} alt='' />
+                <div className='d-flex align-items-center channelHeader__left'>
+                    <img src={snippet?.thumbnails?.default?.url} alt='' className="me-2"/>
 
                     <div className='ml-3 channelHeader__details'>
                         <h3>{snippet?.title}</h3>
@@ -47,15 +48,15 @@ export function ChannelScreen() {
                     </div>
                 </div>
 
-                <button>Subscribe</button>
+                <button className="p-2">Subscribed</button>
             </div>
 
             <Container>
                 <Row className='mt-2'>
                     {!loading
-                        ? channelVideos?.map(video => (
+                        ? channelVideos?.map((video, index) => (
                             <Col md={3} lg={3}>
-                                <Video item={video} channelScreen />
+                                <Video duration={duration[index]} channelIcon={channelIcon[index]} item={video} channelScreen />
                             </Col>
                         ))
                         : [...Array(15)].map(() => (

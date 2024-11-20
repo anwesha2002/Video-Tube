@@ -21,16 +21,18 @@ export function SearchScreen() {
         // searchVideosByKeyword( {keyword : query }).then(()=>{})
 
         query?.trim() !== "" && setSearchResult(true)
-    } , [dispatch,query] );
+    } , [query] );
 
-    const { videos , loading } =  useAppSelector(state => state.searchedVideo)
+    const { videos , loading, ViewsDuration, channelIcons } =  useAppSelector(state => state.searchedVideo)
 
     return (
         <Container>
             {!loading ? (
-                videos?.map(video => (
+                videos?.map((video, index) => (
                     <VideoHorizontal
                         searchresult={searchresult}
+                        viewsDuration={ViewsDuration[index]}
+                        channelIcon={channelIcons[index]}
                         videos={video}
                         key={video?.id?.videoId}
                         searchScreen

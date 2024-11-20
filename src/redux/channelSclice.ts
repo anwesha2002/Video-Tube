@@ -1,12 +1,21 @@
 import {createAsyncThunk , createSlice} from "@reduxjs/toolkit";
-import {channelBYID ,  getUploadPlayListID , getVideosByChannel , SubStat} from "../Data/fetchApi.ts";
+import {
+    channelBYID ,
+    getDurationView ,
+    getIcon ,
+    getUploadPlayListID ,
+    getVideosByChannel ,
+    SubStat
+} from "../Data/fetchApi.ts";
 
 interface channelType {
     loading : boolean,
     channel : any,
     subscriptionStatus : boolean,
     error : null | string,
-    channelVideos : any[]
+    channelVideos : any[],
+    duration : any[],
+    channelIcon : any[],
 }
 
 const initialState : channelType = {
@@ -14,7 +23,9 @@ const initialState : channelType = {
     channel : {},
     subscriptionStatus : false,
     error : null,
-    channelVideos : []
+    channelVideos : [],
+    duration : [],
+    channelIcon : [],
 }
 
 export const channelBYIDThunk = createAsyncThunk<
@@ -49,7 +60,7 @@ export const SubStatThunk = createAsyncThunk<
 )
 
 export const getVideosByChannelThunk = createAsyncThunk<
-    {channelVideos : []},
+    {channelVideos : [], duration : any[], channelIcon : any[]},
     {id : string},
     {rejectValue : string}
 >(
@@ -60,9 +71,18 @@ export const getVideosByChannelThunk = createAsyncThunk<
             const uploadPlaylistId = res.items[0].contentDetails.relatedPlaylists.uploads
 
             const channelres = await getVideosByChannel(uploadPlaylistId)
-            console.log(channelres.items)
-            console.log(res.items)
-            return {channelVideos : channelres.items}
+            const ids = []
+            const channelIDs = []
+            channelres.items.map((video)=> {
+                ids.push( video.snippet?.resourceId?.videoId || video?.id?.videoId ||  video?.id || video?.contentDetails?.videoId )
+                channelIDs.push(video?.snippet?.channelId || video.snippet?.resourceId?.channelId)
+                // return {videoIds : video?.id?.videoId ||  video?.id || video?.contentDetails?.videoId}
+            })
+            const duration = await getDurationView(ids.join(","))
+            const icons = await getIcon(channelIDs.join(","))
+            console.log(ids)
+            // console.log(icons)
+            return {channelVideos : channelres.items, duration : duration, channelIcon : icons}
         }catch (error){
             console.log(error.response.data)
             return rejectWithValue(error.response.data)
@@ -111,6 +131,8 @@ export const channelSlice = createSlice({
                 state.loading = false
                 state.error = null
                 state.channelVideos = action.payload.channelVideos
+                state.duration = action.payload.duration
+                state.channelIcon = action.payload.channelIcon
             })
             .addCase(getVideosByChannelThunk.rejected, (state :channelType, action)=>{
                 state.loading = false

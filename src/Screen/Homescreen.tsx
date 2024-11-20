@@ -8,6 +8,7 @@ import {useAppDispatch , useAppSelector} from "../redux/store.ts";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {SkeletonVideo} from "../Component/Skeleton/SkeletonVideo.tsx";
 import {getyoutubeVideosThunk , getVideosByKeywordThunk} from "../redux/videoSlice.ts";
+import {getDurationView , getIcon} from "../Data/fetchApi.ts";
 
 export function HomeScreen(){
 
@@ -42,17 +43,20 @@ export function HomeScreen(){
     //     }
     // }
 
-    const {videos, activeCategory, loading, nextPageToken} = useAppSelector((state)=> state.homeVideos)
+    const {videos, activeCategory, loading, nextPageToken, videoIds, duration, channelIcon} = useAppSelector((state)=> state.homeVideos)
 
     const category = sessionStorage.getItem("keyword")
     // const[homeVideos, setHomeVideos] = useState([])
+
+    const [allVideoIDs, setAllVideoIDs] = useState([])
+    const [icons, setIcons] = useState([])
 
 
     useEffect ( () => {
         dispatch(getyoutubeVideosThunk())
 
         // getyoutubeVideos().then(()=>{})
-    } , [dispatch] );
+    } , [] );
 
 
     const fetData = () => {
@@ -70,10 +74,28 @@ export function HomeScreen(){
 
     }
 
-    // console.log(activeCategory)
-    // console.log(loading)
 
-    // console.log(videos)
+
+    // useEffect ( () => {
+    //     (async ()=>{
+    //         const res = await getDurationView(allVideoIDs)
+    //         // setVidDuration(res.contentDetails.duration)
+    //         // setViews(res.statistics.viewCount)
+    //
+    //         // console.log("Duration in video : ", res.contentDetails.duration)
+    //         // console.log("Views in video : ", res.statistics.viewCount)
+    //     })()
+    // } , [] );
+    //
+    // useEffect ( () => {
+    //     (async ()=>{
+    //         const res = await getIcon(icons)
+    //         // setChannelIcon(res.snippet.thumbnails.default)
+    //         // console.log("ChannelIcon in video : ", res.snippet.thumbnails.default)
+    //     })()
+    // } , [] );
+
+
 
 
     return(
@@ -90,9 +112,9 @@ export function HomeScreen(){
                 >
 
                 {!loading ?
-                        videos.map ( (item) => (
-                        <Col lg={ 3 } md={ 4 }>
-                            <Video item={ item } key={ item.id }/>
+                        videos.map ( (item,index) => (
+                        <Col key={index} lg={ 3 } md={ 4 }>
+                            <Video duration={duration[index]} channelIcon={channelIcon[index]} setAllVideoIDs={setAllVideoIDs} setIcons={setIcons} item={ item } key={ item.id }/>
                         </Col>
                     ) ) :
                     [...Array(20)].map(()=>(

@@ -24,7 +24,7 @@ import {GiHanger} from "react-icons/gi";
 import {AiOutlineBulb} from "react-icons/ai";
 import {useAppDispatch , useAppSelector} from "../../redux/store.ts";
 import {logout} from "../../redux/authSlice.ts";
-import {Link} from "react-router-dom";
+import {Link , useNavigate} from "react-router-dom";
 import {useEffect , useMemo , useState} from "react";
 // import {getsubscriptions} from "../../redux/subscriptionsSlice.ts";
 import {VideoHorizontal} from "../VideoHorizontal/VideoHorizontal.tsx";
@@ -39,6 +39,7 @@ export function Sidebar({showSidebar}){
     }
 
     const [allSubs, setAllSubs] = useState<any>()
+    const navigate = useNavigate()
 
     const dispatch = useAppDispatch()
 
@@ -49,13 +50,18 @@ export function Sidebar({showSidebar}){
         }else {
             dispatch(getsubscriptionsThunk())
         }
-    } , [dispatch] );
+    } , [] );
 
     useEffect ( () => {
         cache.set('cachedData', allSubs)
     } , [allSubs] );
     
     const { subscriptions, loading } = useAppSelector(state => state.subscriptions)
+
+    function handleClick(channelId){
+        navigate(`/feed/${channelId}`)
+    }
+
 
     return(
         <Nav className={`sidebar ${showSidebar ? "open" : " "}`}>
@@ -113,7 +119,7 @@ export function Sidebar({showSidebar}){
                     <span>Subscriptions</span>
                 </li>
                 { subscriptions?.map ( video => (
-                    <li className="d-flex align-items-center">
+                    <li onClick={()=>handleClick(video.snippet?.resourceId?.channelId)} className="d-flex align-items-center">
                         <img src={video.snippet?.thumbnails?.medium?.url}  style={{height:"20px", width : "20px" , borderRadius:"50%"}}/>
                         <span  className="ms-3 w-100">{ video?.snippet?.title }</span>
                     </li>

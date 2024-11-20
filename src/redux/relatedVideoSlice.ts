@@ -1,9 +1,11 @@
 import {createAsyncThunk , createSlice} from "@reduxjs/toolkit";
-import { getReletedVideos} from "../Data/fetchApi.ts";
+import {getDurationView , getIcon , getReletedVideos} from "../Data/fetchApi.ts";
 
 
 interface relatedVideosState {
     relatedVideos : any[],
+    ViewsDuration :  any[],
+    channelIcons : any[],
     loading: boolean;
     error: string | null;
 }
@@ -11,11 +13,13 @@ interface relatedVideosState {
 
 const initialState : relatedVideosState = {
     relatedVideos : [],
+    ViewsDuration :  [],
+    channelIcons : [],
     loading : false,
     error : null,
 }
 export const getReletedVideosTHunk = createAsyncThunk<
-    {relatedVideos  : any[]},
+    {relatedVideos  : any[], ViewsDuration : any[], channelIcons : any[]},
     {id : string },
     {rejectValue : string}
 >(
@@ -23,9 +27,20 @@ export const getReletedVideosTHunk = createAsyncThunk<
     async ({ id } , {rejectWithValue, getState}) => {
         try {
             const res = await getReletedVideos(id)
+            const ids = []
+            const channelIDs = []
+            res.items.map((video)=> {
+                ids.push(video?.id?.videoId)
+                channelIDs.push(video?.snippet?.resourceId?.channelId || video?.snippet?.channelId || video?.channelId)
+                // return {videoIds : video?.id?.videoId ||  video?.id || video?.contentDetails?.videoId}
+            })
+            console.log(channelIDs)
+            console.log(ids)
 
+            const duration_and_Views = await getDurationView(ids.join(","))
+            const icons = await getIcon(channelIDs.join(","))
             console.log(res)
-            return { relatedVideos : res.items }
+            return { relatedVideos : res.items, ViewsDuration : duration_and_Views, channelIcons : icons }
         }catch (error){
             return rejectWithValue(error.response.data)
         }
@@ -51,6 +66,8 @@ export const relatedVieos = createSlice({
                 state.loading = false
                 state.error = null
                 state.relatedVideos = action.payload.relatedVideos
+                state.ViewsDuration = action.payload.ViewsDuration
+                state.channelIcons = action.payload.channelIcons
                 // state.activeCategory = action.meta.arg.keyword
             })
             .addCase(getReletedVideosTHunk.rejected,(state : relatedVideosState, action)=>{

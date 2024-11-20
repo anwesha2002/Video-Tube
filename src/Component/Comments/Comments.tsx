@@ -20,7 +20,7 @@ export function Comments({videoId, totalComments} : CommentsProps){
     useEffect ( () => {
         dispatch(GetCommentsThunk({id : videoId}))
         // GetComments({id : videoId}).then(()=>{})
-    } , [dispatch, videoId] );
+    } , [videoId] );
 
     const { comments } = useAppSelector(state => state.comment)
 

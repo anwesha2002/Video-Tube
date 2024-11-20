@@ -12,6 +12,7 @@ export async function getyoutubeVideos(getState){
         const res = await FetchApi("/videos",{
             params : {
                 part: 'snippet,contentDetails,statistics',
+                // fields : 'items,items%2Fstatistics%2FviewCount',
                 chart: 'mostPopular',
                 regionCode: 'IN',
                 maxResults: 20,
@@ -33,7 +34,8 @@ export async function getVideosByKeyword( keyword : string, getState ){
                 q:keyword,
                 maxResults: 20,
                 pageToken: getState().homeVideos.nextPageToken,
-                type : 'video'
+                type : 'video',
+                // fields : 'items,items%2Fstatistics%2FviewCount,items%2FcontentDetails%2Fduration'
             }
         })
         await console.log(`get videos by keyword ${keyword}` )
@@ -223,6 +225,36 @@ export async function getVideosByChannel(uploadPlaylistId : string | undefined){
 
         return channelres.data
     }catch (error){
+        return error
+    }
+}
+
+export async function getDurationView(videoIds : string){
+    try {
+        const res = await FetchApi('/videos',{
+            params:{
+                part: 'contentDetails,statistics',
+                id:`${videoIds}`
+            }
+        })
+        console.log(res.data)
+        return res.data.items
+    }catch(error){
+        return error
+    }
+}
+
+export async function getIcon(channelIds : string){
+    try {
+        const res = await FetchApi('/channels',{
+            params:{
+                part: 'snippet, statistics',
+                id:channelIds
+            }
+        })
+        console.log(res.data.items)
+        return res.data.items
+    }catch(error){
         return error
     }
 }

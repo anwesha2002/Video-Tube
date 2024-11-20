@@ -14,17 +14,17 @@ export function Subscription() {
     useEffect ( () => {
         dispatch(getsubscriptionsThunk())
         // getsubscriptions().then(()=>{})
-    } , [dispatch] );
+    } , [] );
 
-    const { subscriptions, loading } = useAppSelector(state => state.subscriptions)
+    const { subscriptions, loading, ViewsDuration, channelIcons } = useAppSelector(state => state.subscriptions)
 
 
     return (
         <Container fluid>
              <h3 className="ms-5 m-2">All subscriptions</h3>
             {!loading ? (
-                subscriptions?.map(video => (
-                    <VideoHorizontal videos={video} key={video.id} subScreen />
+                subscriptions?.map((video, index) => (
+                    <VideoHorizontal viewsDuration={ViewsDuration[index]} channelIcons={channelIcons[index]} videos={video} key={index} subScreen />
                 ))
             ) : (
                 <SkeletonTheme color='#343a40' highlightColor='#3c4147'>

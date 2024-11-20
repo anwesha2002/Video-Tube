@@ -1,14 +1,12 @@
 import {AiFillEye} from "react-icons/ai";
 import "./_video.scss"
-import parse from 'html-react-parser'
 
 import moment from 'moment'
 import numeral from 'numeral'
 import {useEffect , useState} from "react";
-import {FetchApi} from "../../Data/fetchApi.ts";
-import {Link , useNavigate} from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 
-export function Video({item, channelScreen}){
+export function Video({item, channelScreen, setIcons, setAllVideoIDs, duration, channelIcon}){
 
     const {
         id,
@@ -18,77 +16,87 @@ export function Video({item, channelScreen}){
             channelId,
             publishedAt,
                 title,
+            resourceId,
         channelTitle}, } = item
 
-    const _videoId = id?.videoId ||  id || contentDetails.videoId
+    const _videoId =  resourceId?.videoId || id?.videoId ||  id || contentDetails.videoId
 
-    const [channelIcon, setChannelIcon] = useState(null)
-    const [vidDuration, setVidDuration] = useState(null)
-    const [views, setViews] = useState(null)
+    // const [allVideoIDs, setAllVideoIDs] = useState([])
+    // const [icons, setIcons] = useState([])
+
+    // useEffect(()=>{
+    //     setAllVideoIDs(_videoId)
+    // },[_videoId])
+    //
+    // useEffect(()=>{
+    //     setIcons(channelId)
+    // },[channelId])
+
+    // console.log(allVideoIDs)
+    // console.log(icons)
+
+
+    // const [channelIcon, setChannelIcon] = useState(null)
+    // const [vidDuration, setVidDuration] = useState(null)
+    // const [views, setViews] = useState(null)
 
     const navigate = useNavigate()
 
-    useEffect ( () => {
-        (async ()=>{
-           // const res = await FetchApi('/videos',{
-           //     params:{
-           //         part: 'contentDetails,statistics',
-           //         id:_videoId
-           //     }
-           // })
-           //  setVidDuration(res.data.items[0].contentDetails.duration)
-           //  setViews(res.data.items[0].statistics.viewCount)
+    // useEffect ( () => {
+    //     (async ()=>{
+    //        // const res = await getDurationView(allVideoIDs)
+    //        //  setVidDuration(res.contentDetails.duration)
+    //        //  setViews(res.statistics.viewCount)
+    //
+    //         // console.log("Duration in video : ", vidDuration)
+    //         // console.log("Views in video : ", views)
+    //     })()
+    // } , [] );
 
-            console.log("Duration in video")
-            console.log("Views in video")
-        })()
-    } , [_videoId] );
+    // useEffect ( () => {
+    //     (async ()=>{
+    //         // const res = await getIcon(icons)
+    //         // setChannelIcon(res.snippet.thumbnails.default)
+    //         // console.log("ChannelIcon in video : ", channelIcon)
+    //     })()
+    // } , [] );
 
-    useEffect ( () => {
-        (async ()=>{
-            // const res = await FetchApi('/channels',{
-            //     params:{
-            //         part: 'snippet',
-            //         id:channelId
-            //     }
-            // })
-            // setChannelIcon(res.data.items[0].snippet.thumbnails.default)
-            console.log("ChannelIcon in video")
-        })()
-    } , [channelId] );
-
-    const second = moment.duration(vidDuration).asSeconds();
+    const second = moment.duration(duration?.contentDetails?.duration).asSeconds();
     const _duration = moment.utc(second * 1000).format("mm:ss")
 
     function handleClick(){
-        navigate(`watch/${_videoId}`)
+        navigate(`../watch/${_videoId}`)
     }
+
+    // console.log(duration)
 
 
     return(
-        <Link to={`watch/${_videoId}`}>
-            <div className='video' >
+        // <Link to={`watch/${_videoId}`}>
+            <div className='video' onClick={handleClick}>
                 <div className='video__top'>
-                     <img src="https://i.ytimg.com/vi/mpKKcqWnTus/default.jpg" alt='' />
+                     {/*<img src="https://i.ytimg.com/vi/mpKKcqWnTus/default.jpg" alt='' />*/}
+                     <img src={ medium.url } alt='' />
+                    {/*<div dangerouslySetInnerHTML={ { __html : "\u003ciframe width=\"480\" height=\"270\" src=\"//www.youtube.com/embed/Tow6Tw0XoCg\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen\u003e\u003c/iframe\u003e" } }></div>*/}
                     {/*<LazyLoadImage src={medium.url} effect='blur' />*/}
                     <span className='video__top__duration'>{_duration}</span>
                 </div>
                 <div className='video__title'>{title}</div>
                 <div className='video__details'>
                 <span>
-                   <AiFillEye /> {numeral(views).format('0.a')} Views • {'  '}
+                   <AiFillEye /> {numeral(duration?.statistics?.viewCount).format('0.a')} Views • {'  '}
                 </span>{'  '}
                     <span> {moment(publishedAt).fromNow()} </span>
                 </div>
                 {!channelScreen && (
                     <div className='video__channel'>
                         {/*<LazyLoadImage src={channelIcon?.url} effect='blur' />*/}
-                        <img src={channelIcon?.url} effect='blur' />
+                        <img src={channelIcon?.snippet?.thumbnails?.default?.url} effect='blur' />
 
                         <p>{channelTitle}</p>
                     </div>
                 )}
             </div>
-        </Link>
+        // </Link>
     )
 }

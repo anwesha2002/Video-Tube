@@ -1,8 +1,10 @@
 import {createAsyncThunk , createSlice , PayloadAction} from "@reduxjs/toolkit";
-import { getsubscriptions} from "../Data/fetchApi.ts";
+import {getDurationView , getIcon , getsubscriptions} from "../Data/fetchApi.ts";
 
 interface subscriptionsState {
     subscriptions : any[],
+    ViewsDuration : any[],
+    channelIcons : any[],
     // nextPageToken : string | null,
     // activeCategory: string | null; // Ensure it's initialized properly
     loading: boolean;
@@ -12,6 +14,8 @@ interface subscriptionsState {
 
 const initialState : subscriptionsState = {
     subscriptions : [],
+    ViewsDuration : [],
+    channelIcons : [],
     loading : false,
     // nextPageToken : null,
     error : null,
@@ -19,15 +23,24 @@ const initialState : subscriptionsState = {
 }
 
 export const getsubscriptionsThunk = createAsyncThunk<
-    {subscriptions : any[]},
+    {subscriptions : any[],ViewsDuration : any[], channelIcons : any[],},
     void,
     {rejectValue : string}
 >(
     'subscription/getsubscriptions',async (_,{rejectWithValue, getState}) => {
         try {
             const res = await getsubscriptions(getState)
+            const ids = []
+            const channelIDs = []
+            res.items.map((video)=> {
+                ids.push(video?.id?.videoId || video?.id)
+                channelIDs.push(video?.snippet?.resourceId?.channelId || video?.snippet.channelId || video.channelId)
+                // return {videoIds : video?.id?.videoId ||  video?.id || video?.contentDetails?.videoId}
+            })
+            const duration_and_Views = await getDurationView(ids.join(","))
+            const icons = await getIcon(channelIDs.join(","))
             console.log(res.items)
-            return {subscriptions : res.items}
+            return {subscriptions : res.items, ViewsDuration : duration_and_Views, channelIcons : icons}
         }catch (error){
             return rejectWithValue(error.response.data)
         }
@@ -48,6 +61,8 @@ export const subscriptionSliceStore = createSlice({
             .addCase(getsubscriptionsThunk.fulfilled,(state : subscriptionsState, action)=>{
                 state.loading = false
                 state.subscriptions =   action.payload.subscriptions
+                state.ViewsDuration = action.payload.ViewsDuration
+                state.channelIcons = action.payload.channelIcons
                 // state.nextPageToken = action.payload.nextPageToken
                 state.error = null
                 // state.activeCategory = 'All'

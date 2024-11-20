@@ -5,12 +5,13 @@ import moment from "moment";
 import numeral from "numeral";
 import {useEffect , useState} from "react";
 import {redirect , replace , useNavigate} from "react-router-dom";
+import {FetchApi} from "../../Data/fetchApi.ts";
 
-export function VideoHorizontal({videos, searchScreen, searchresult, subScreen}){
+export function VideoHorizontal({videos, searchScreen, searchresult, subScreen, channelIcons, viewsDuration}){
 
-    const [views, setViews] = useState()
-    const [duration, setDuration] = useState()
-    const [channelIcon, setChannelIcon] = useState(null)
+    // const [views, setViews] = useState()
+    // const [duration, setDuration] = useState()
+    // const [channelIcon, setChannelIcon] = useState(null)
     const [subscriberCount, setsubscriberCount] = useState(null)
 
     const navigate = useNavigate()
@@ -39,42 +40,42 @@ export function VideoHorizontal({videos, searchScreen, searchresult, subScreen})
     const _channelId = resourceId?.channelId || channelId
 
 
-    useEffect ( () => {
-        isVideo && (async ()=>{
-            // const res = await FetchApi('/videos',{
-            //     params:{
-            //         part: 'contentDetails,statistics',
-            //         id: id.videoId
-            //     }
-            // })
-            // setDuration(res.data.items[0].contentDetails.duration)
-            // setViews(res.data.items[0].statistics.viewCount)
+    // useEffect ( () => {
+    //     isVideo && (async ()=>{
+    //         const res = await FetchApi('/videos',{
+    //             params:{
+    //                 part: 'contentDetails,statistics',
+    //                 id: id.videoId
+    //             }
+    //         })
+    //         setDuration(res.data.items[0].contentDetails.duration)
+    //         setViews(res.data.items[0].statistics.viewCount)
+    //
+    //         console.log("duration in video horizontal")
+    //         console.log("Views in video horizontal")
+    //     })()
+    // } , [id, isVideo] );
 
-            console.log("duration in video horizontal")
-            console.log("Views in video horizontal")
-        })()
-    } , [id, isVideo] );
+    // useEffect ( () => {
+    //     (async ()=>{
+    //         const res = await FetchApi('/channels',{
+    //             params:{
+    //                 part: 'snippet, statistics',
+    //                 id:_channelId
+    //             }
+    //         })
+    //         setChannelIcon(res.data.items[0].snippet.thumbnails.default)
+    //
+    //         console.log("ChannelIcon in video horizontal")
+    //         // {subScreen &&
+    //         //     setsubscriberCount ( res.data.items[0].statistics.subscriberCount )
+    //         // }
+    //         console.log("subscriberCount in video horizontal")
+    //
+    //     })()
+    // } , [_channelId] );
 
-    useEffect ( () => {
-        (async ()=>{
-            // const res = await FetchApi('/channels',{
-            //     params:{
-            //         part: 'snippet, statistics',
-            //         id:_channelId
-            //     }
-            // })
-            // setChannelIcon(res.data.items[0].snippet.thumbnails.default)
-
-            console.log("ChannelIcon in video horizontal")
-            // {subScreen &&
-            //     setsubscriberCount ( res.data.items[0].statistics.subscriberCount )
-            // }
-            console.log("subscriberCount in video horizontal")
-
-        })()
-    } , [_channelId] );
-
-    const seconds = moment.duration(duration).asSeconds()
+    const seconds = moment.duration(viewsDuration?.contentDetails?.duration).asSeconds()
     const _duration = moment.utc(seconds * 1000).format('mm:ss')
 
     const _videoId : string = id.videoId
@@ -86,7 +87,7 @@ export function VideoHorizontal({videos, searchScreen, searchresult, subScreen})
 
     const thumbnail = !isVideo && 'videoHorizontal_thumbnail_channel'
 
-    console.log(channelIcon)
+    // console.log(channelIcons)
 
     return (
         <Row className='py-2 m-1 videoHorizontal align-items-center' onClick={handleClick}>
@@ -123,18 +124,21 @@ export function VideoHorizontal({videos, searchScreen, searchresult, subScreen})
 
                 { isVideo &&
                     <div className='videoHorizontal_details text-secondary'>
-                    { numeral ( views ).format ( '0.a' ) } Views •
+                    { numeral ( viewsDuration?.statistics?.viewCount ).format ( '0.a' ) } Views •
                     { moment ( publishedAt ).fromNow () }
                 </div>
                 }
 
                 {subScreen &&
-                    <div className='videoHorizontal_details ' style={{fontSize: "0.7rem"}}>{numeral ( subscriberCount ).format ( '0.a' )} Subscribers</div>
+                    <div className='videoHorizontal_details ' style={{fontSize: "0.7rem"}}>
+                        {channelIcons?.snippet?.customUrl} . {' '}
+                        {numeral ( channelIcons?.statistics?.subscriberCount ).format ( '0.a' )} Subscribers
+                    </div>
                 }
 
                 <div className='my-1 videoHorizontal_channel d-flex align-items-center'>
                     {isVideo && searchresult &&
-                        <img src={channelIcon?.url}  />
+                        <img src={channelIcons?.snippet.thumbnails.default.url}  />
                     }
                     { isVideo && searchresult && <p className='mb-0'>{ channelTitle }</p> }
                 </div>

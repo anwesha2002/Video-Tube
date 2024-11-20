@@ -1,9 +1,12 @@
 import {createAsyncThunk , createSlice , PayloadAction} from "@reduxjs/toolkit";
-import { getVideosByKeyword , getyoutubeVideos} from "../Data/fetchApi.ts";
+import {getDurationView , getIcon , getVideosByKeyword , getyoutubeVideos} from "../Data/fetchApi.ts";
 
 
 interface ItemState {
     videos : any[],
+    videoIds : any[],
+    duration : any[],
+    channelIcon : any[],
     nextPageToken : string | null,
     activeCategory: string | null; // Ensure it's initialized properly
     loading: boolean;
@@ -13,6 +16,9 @@ interface ItemState {
 
 const initialState : ItemState = {
     videos : [],
+    videoIds : [],
+    duration : [],
+    channelIcon : [],
     loading : false,
     nextPageToken : null,
     error : null,
@@ -20,7 +26,7 @@ const initialState : ItemState = {
 }
 
 export const getyoutubeVideosThunk = createAsyncThunk<
-    {videos  : any[],nextPageToken  : string, activeCategory : string},
+    {videos  : any[],nextPageToken  : string, activeCategory : string, videoIds : any[], duration : any[], channelIcon : any[]},
     void,
     {rejectValue : string}
 >(
@@ -28,8 +34,20 @@ export const getyoutubeVideosThunk = createAsyncThunk<
     async (_, {rejectWithValue, getState}) => {
         try {
             const res  = await getyoutubeVideos(getState)
+            const ids = []
+            const channelIDs = []
+            const title = []
+            res.items.map((video)=> {
+                ids.push(video?.id?.videoId ||  video?.id || video?.contentDetails?.videoId)
+                channelIDs.push(video?.snippet?.channelId)
+                title.push(video?.snippet.channelTitle)
+                // return {videoIds : video?.id?.videoId ||  video?.id || video?.contentDetails?.videoId}
+            })
+            const duration = await getDurationView(ids)
+            const icons = await getIcon(channelIDs.join(","))
             // console.log(res.data.items)
-            return { videos : res.items, nextPageToken : res.nextPageToken , activeCategory : getState().homeVideos.activeCategory}
+            console.log(title)
+            return { videos : res.items, nextPageToken : res.nextPageToken , activeCategory : getState().homeVideos.activeCategory, videoIds : ids, duration : duration, channelIcon : icons}
         }catch (error){
             return rejectWithValue(error.message)
         }
@@ -37,7 +55,7 @@ export const getyoutubeVideosThunk = createAsyncThunk<
 )
 
 export const getVideosByKeywordThunk = createAsyncThunk<
-    {videos  : any[],nextPageToken  : string, activeCategory : string},
+    {videos  : any[],nextPageToken  : string, activeCategory : string, videoIds : any[], duration: any[], channelIcon : any[]},
     {keyword : string },
     {rejectValue : string}
 >(
@@ -46,8 +64,17 @@ export const getVideosByKeywordThunk = createAsyncThunk<
         try {
             const res = await getVideosByKeyword(keyword,getState)
             console.log('keyword',keyword)
+            const ids = []
+            const channelIDs = []
+            res.items.map((video)=> {
+                ids.push(video?.id?.videoId ||  video?.id || video?.contentDetails?.videoId)
+                channelIDs.push(video?.snippet?.channelId)
+                // return {videoIds : video?.id?.videoId ||  video?.id || video?.contentDetails?.videoId}
+            })
+            const duration = await getDurationView(ids.join(","))
+            const icons = await getIcon(channelIDs.join(","))
             // console.log('keyword',res.data.items)
-            return { videos : res.items, nextPageToken : res.nextPageToken, activeCategory : keyword }
+            return { videos : res.items, nextPageToken : res.nextPageToken, activeCategory : keyword, videoIds : ids, duration : duration, channelIcon : icons }
         }catch (error){
             return rejectWithValue(error.message)
         }
@@ -68,6 +95,9 @@ export const videoSliceStore = createSlice({
            .addCase(getyoutubeVideosThunk.fulfilled,(state : ItemState, action)=>{
                state.loading = false
                state.videos =   [...state.videos , ...action.payload.videos]
+               state.videoIds =   [...state.videoIds , ...action.payload.videoIds]
+               state.duration =   [...state.duration , ...action.payload.duration]
+               state.channelIcon =   [...state.channelIcon , ...action.payload.channelIcon]
                state.nextPageToken = action.payload.nextPageToken
                state.error = null
                state.activeCategory = 'All'
@@ -85,6 +115,8 @@ export const videoSliceStore = createSlice({
                state.loading = false
                const prevValue = state.activeCategory;
                prevValue === action.payload.activeCategory ? state.videos = [...state.videos , ...action.payload.videos] : state.videos = action.payload.videos
+               prevValue === action.payload.activeCategory ? state.videoIds = [...state.videoIds , ...action.payload.videoIds] : state.videoIds = action.payload.videoIds
+               prevValue === action.payload.activeCategory ? state.duration = [...state.duration , ...action.payload.duration] : state.duration = action.payload.duration
                state.nextPageToken = action.payload.nextPageToken
                state.error = null
                console.log(action.payload.activeCategory)
