@@ -1,9 +1,9 @@
-import {Suspense, useState} from 'react'
+import {Suspense} from 'react'
 import './App.css'
 import {HomeScreen} from "./Screen/Homescreen.tsx";
 import "./_app.scss"
 import {Home} from "./Page/Home.tsx";
-import {Route, Routes, useNavigate} from "react-router-dom";
+import {Route, Routes} from "react-router-dom";
 import {LoginScreen} from "./Screen/LoginScreen/LoginScreen.tsx";
 import {PrivateRoute} from "./Component/PrivateRoute/privateRoute.tsx";
 import {WatchScreen} from "./Screen/WatchScreen/WatchScreen.tsx";
@@ -12,8 +12,6 @@ import {Subscription} from "./Screen/Subscription/Subscription.tsx";
 import {ChannelScreen} from "./Screen/channelScreen/channelScreen.tsx";
 
 function App() {
-  const [count, setCount] = useState(0)
-    const navigate= useNavigate()
 
 
     // const { WatchScreen } = React.lazy(() => import('./Screen/WatchScreen/WatchScreen.tsx'));

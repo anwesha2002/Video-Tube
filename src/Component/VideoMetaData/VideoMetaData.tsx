@@ -6,7 +6,6 @@ import ShowMoreText from "react-show-more-text"
 import {useAppDispatch , useAppSelector} from "../../redux/store.ts";
 import {useEffect} from "react";
 // import {channelBYID , SubStat} from "../../redux/channelSclice.ts";
-import {FaBell} from "react-icons/fa";
 import {AiOutlineBell} from "react-icons/ai";
 import {channelBYIDThunk , SubStatThunk} from "../../redux/channelSclice.ts";
 

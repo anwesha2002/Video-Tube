@@ -20,7 +20,7 @@ export const GetCommentsThunk = createAsyncThunk<
     {id : string},
     {rejectValue : string}
 >(
-    'comment/getComments',async ({id},{rejectWithValue, getState}) => {
+    'comment/getComments',async ({id },{rejectWithValue, getState}) => {
         try {
             const res = await GetComments(id)
             console.log(getState().auth.accessToken)

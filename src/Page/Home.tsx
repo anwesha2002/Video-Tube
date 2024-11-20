@@ -1,9 +1,7 @@
 import {Header} from "../Component/Header/header.tsx";
 import {Sidebar} from "../Component/Sidebar/sidebar.tsx";
 import {Container} from "react-bootstrap";
-import {HomeScreen} from "../Screen/Homescreen.tsx";
-import {useEffect , useState} from "react";
-import {LoginScreen} from "../Screen/LoginScreen/LoginScreen.tsx";
+import { useState} from "react";
 import {useAppSelector} from "../redux/store.ts";
 import {useNavigate} from "react-router-dom";
 

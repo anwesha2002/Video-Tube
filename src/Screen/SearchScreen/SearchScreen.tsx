@@ -9,40 +9,40 @@ import {searchVideosByKeywordThunk} from "../../redux/searchVideoSlice.ts";
 
 export function SearchScreen() {
 
-    const { query } = useParams()
-    const dispatch = useAppDispatch()
+    const { query } = useParams ()
+    const dispatch = useAppDispatch ()
 
-    const [searchresult, setSearchResult] = useState<boolean>(false)
+    const [searchresult , setSearchResult] = useState<boolean> ( false )
 
-    console.log("query" , query)
+    console.log ( "query" , query )
 
     useEffect ( () => {
-        dispatch(searchVideosByKeywordThunk( {keyword : query }))
+        dispatch ( searchVideosByKeywordThunk ( { keyword : query } ) )
         // searchVideosByKeyword( {keyword : query }).then(()=>{})
 
-        query?.trim() !== "" && setSearchResult(true)
+        query?.trim () !== "" && setSearchResult ( true )
     } , [query] );
 
-    const { videos , loading, ViewsDuration, channelIcons } =  useAppSelector(state => state.searchedVideo)
+    const { videos , loading , ViewsDuration , channelIcons } = useAppSelector ( state => state.searchedVideo )
 
     return (
         <Container>
-            {!loading ? (
-                videos?.map((video, index) => (
+            { !loading ? (
+                videos?.map ( (video , index) => (
                     <VideoHorizontal
-                        searchresult={searchresult}
-                        viewsDuration={ViewsDuration[index]}
-                        channelIcon={channelIcons[index]}
-                        videos={video}
-                        key={video?.id?.videoId}
+                        searchresult={ searchresult }
+                        viewsDuration={ ViewsDuration[index] }
+                        channelIcon={ channelIcons[index] }
+                        videos={ video }
+                        key={ video?.id?.videoId }
                         searchScreen
                     />
-                ))
+                ) )
             ) : (
                 <SkeletonTheme color='#343a40' highlightColor='#3c4147'>
-                    <Skeleton width='100%' height='160px' count={20} />
+                    <Skeleton width='100%' height='160px' count={ 20 }/>
                 </SkeletonTheme>
-            )}
+            ) }
         </Container>
     );
 }

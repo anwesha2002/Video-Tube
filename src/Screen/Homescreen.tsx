@@ -1,18 +1,16 @@
-import {Col, Container, Row} from "react-bootstrap";
+import {Col , Container} from "react-bootstrap";
 import {CategoryBar} from "../Component/Category/CategoryBar.tsx";
 import {Video} from "../Component/Video/video.tsx";
-import axios from "axios";
 import {useEffect , useState} from "react";
 import {useAppDispatch , useAppSelector} from "../redux/store.ts";
 // import {getVideosByKeyword , getyoutubeVideos} from "../redux/videoSlice.ts";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {SkeletonVideo} from "../Component/Skeleton/SkeletonVideo.tsx";
-import {getyoutubeVideosThunk , getVideosByKeywordThunk} from "../redux/videoSlice.ts";
-import {getDurationView , getIcon} from "../Data/fetchApi.ts";
+import {getVideosByKeywordThunk , getyoutubeVideosThunk} from "../redux/videoSlice.ts";
 
-export function HomeScreen(){
+export function HomeScreen() {
 
-    const dispatch = useAppDispatch()
+    const dispatch = useAppDispatch ()
 
     // useEffect(()=>{
     //     axios.get("https://www.googleapis.com/youtube/v3/videos?key=AIzaSyCNLCghPaaEOQ6sRTIcU5MUnAWCbEEufBQ&chart=mostPopular&part=player&maxResults=50")
@@ -43,37 +41,43 @@ export function HomeScreen(){
     //     }
     // }
 
-    const {videos, activeCategory, loading, nextPageToken, videoIds, duration, channelIcon} = useAppSelector((state)=> state.homeVideos)
+    const {
+        videos ,
+        activeCategory ,
+        loading ,
+        nextPageToken ,
+        videoIds ,
+        duration ,
+        channelIcon
+    } = useAppSelector ( (state) => state.homeVideos )
 
-    const category = sessionStorage.getItem("keyword")
+    const category = sessionStorage.getItem ( "keyword" )
     // const[homeVideos, setHomeVideos] = useState([])
 
-    const [allVideoIDs, setAllVideoIDs] = useState([])
-    const [icons, setIcons] = useState([])
+    const [allVideoIDs , setAllVideoIDs] = useState ( [] )
+    const [icons , setIcons] = useState ( [] )
 
 
     useEffect ( () => {
-        dispatch(getyoutubeVideosThunk())
+        dispatch ( getyoutubeVideosThunk () )
 
         // getyoutubeVideos().then(()=>{})
     } , [] );
 
 
     const fetData = () => {
-        if(activeCategory === 'All') {
-            dispatch(getyoutubeVideosThunk())
+        if (activeCategory === 'All') {
+            dispatch ( getyoutubeVideosThunk () )
 
             // getyoutubeVideos().then(()=>{})
-        }
-        else {
-            console.log(JSON.parse(category))
-            dispatch(getVideosByKeywordThunk({ keyword: JSON.parse(category) }))
+        } else {
+            console.log ( JSON.parse ( category ) )
+            dispatch ( getVideosByKeywordThunk ( { keyword : JSON.parse ( category ) } ) )
 
             // getVideosByKeyword({ keyword: JSON.parse(category) }).then(()=>{})
         }
 
     }
-
 
 
     // useEffect ( () => {
@@ -96,39 +100,39 @@ export function HomeScreen(){
     // } , [] );
 
 
-
-
-    return(
-        <Container style={{height:"90vh"}} className="overflow-y-scroll">
+    return (
+        <Container style={ { height : "90vh" } } className="overflow-y-scroll">
             <CategoryBar/>
-                <InfiniteScroll
-                    next={fetData}
-                    hasMore={!!nextPageToken}
-                    loader={
-                        <div className="spinner-border text-danger d-block mx-auto"></div>
-                    }
-                    dataLength={videos.length}
-                    className="row"
-                >
+            <InfiniteScroll
+                next={ fetData }
+                hasMore={ !!nextPageToken }
+                loader={
+                    <div className="spinner-border text-danger d-block mx-auto"></div>
+                }
+                dataLength={ videos.length }
+                className="row"
+            >
 
-                {!loading ?
-                        videos.map ( (item,index) => (
-                        <Col key={index} lg={ 3 } md={ 4 }>
-                            <Video duration={duration[index]} channelIcon={channelIcon[index]} setAllVideoIDs={setAllVideoIDs} setIcons={setIcons} item={ item } key={ item.id }/>
+                { !loading ?
+                    videos.map ( (item , index) => (
+                        <Col key={ index } lg={ 3 } md={ 4 }>
+                            <Video duration={ duration[index] } channelIcon={ channelIcon[index] }
+                                   setAllVideoIDs={ setAllVideoIDs } setIcons={ setIcons } item={ item }
+                                   key={ item.id }/>
                         </Col>
                     ) ) :
-                    [...Array(20)].map(()=>(
-                        <Col lg={3} md={4}>
+                    [...Array ( 20 )].map ( () => (
+                        <Col lg={ 3 } md={ 4 }>
                             <SkeletonVideo/>
                         </Col>
-                    ))
+                    ) )
 
-                    }
+                }
 
 
-                </InfiniteScroll>
+            </InfiniteScroll>
 
-            {/*<div className="border border-primary w-100 m-0">HomeScreen</div>*/}
+            {/*<div className="border border-primary w-100 m-0">HomeScreen</div>*/ }
         </Container>
     )
 }

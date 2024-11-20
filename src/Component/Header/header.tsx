@@ -1,12 +1,12 @@
-import {FaBars , FaPortrait} from "react-icons/fa";
-import {Button , Col , Row} from "react-bootstrap";
+import {FaBars } from "react-icons/fa";
+import {  Col } from "react-bootstrap";
 import {AiOutlineSearch} from "react-icons/ai";
 import {MdApps , MdNotifications} from "react-icons/md";
 import ytLogo from "../../public/Youtube_logo.png"
 import "./_header.scss"
-import {useEffect , useState} from "react";
+import { useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {useAppDispatch , useAppSelector} from "../../redux/store.ts";
+import { useAppSelector} from "../../redux/store.ts";
 
 export function Header({handleToggleSidebar}){
     const [input, setInput] = useState("")
@@ -47,7 +47,7 @@ export function Header({handleToggleSidebar}){
                         <MdNotifications size={28}/>
                         <MdApps size={28}/>
                         <img
-                            src={user.profileURL}
+                            src={user?.profileURL}
                             className=" object-fit-cover d-block rounded-circle"
                         />
                     </div>

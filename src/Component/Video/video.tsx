@@ -3,17 +3,15 @@ import "./_video.scss"
 
 import moment from 'moment'
 import numeral from 'numeral'
-import {useEffect , useState} from "react";
 import { useNavigate} from "react-router-dom";
 
-export function Video({item, channelScreen, setIcons, setAllVideoIDs, duration, channelIcon}){
+export function Video({item, channelScreen, duration, channelIcon}){
 
     const {
         id,
         contentDetails ,
         snippet : {
             thumbnails : {medium},
-            channelId,
             publishedAt,
                 title,
             resourceId,

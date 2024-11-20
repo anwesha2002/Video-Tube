@@ -18,7 +18,7 @@ export function Comments({videoId, totalComments} : CommentsProps){
     const dispatch = useAppDispatch()
 
     useEffect ( () => {
-        dispatch(GetCommentsThunk({id : videoId}))
+        if(videoId) dispatch(GetCommentsThunk({id : videoId}))
         // GetComments({id : videoId}).then(()=>{})
     } , [videoId] );
 

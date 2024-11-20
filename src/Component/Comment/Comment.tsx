@@ -1,7 +1,7 @@
 import moment from "moment";
 import "./_comment.scss"
 
-export function Comment({comment}){
+export function Comment({comment}:{comment : any}){
 
     const {
         authorDisplayName,

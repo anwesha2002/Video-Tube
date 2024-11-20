@@ -8,7 +8,6 @@ import {useAppDispatch , useAppSelector} from "../../redux/store.ts";
 import {useEffect} from "react";
 // import {getVideosById} from "../../redux/selectVideoSlice.ts";
 // import {getReletedVideos} from "../../redux/relatedVideoSlice.ts";
-import {SkeletonVideo} from "../../Component/Skeleton/SkeletonVideo.tsx";
 import Skeleton , {SkeletonTheme} from "react-loading-skeleton";
 import {getVideosByIdThunk} from "../../redux/selectVideoSlice.ts";
 import {getReletedVideosTHunk} from "../../redux/relatedVideoSlice.ts";

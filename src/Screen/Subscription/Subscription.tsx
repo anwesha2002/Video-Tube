@@ -9,28 +9,29 @@ import {getsubscriptionsThunk} from "../../redux/subscriptionsSlice.ts";
 
 export function Subscription() {
 
-    const dispatch = useAppDispatch()
+    const dispatch = useAppDispatch ()
 
     useEffect ( () => {
-        dispatch(getsubscriptionsThunk())
+        dispatch ( getsubscriptionsThunk () )
         // getsubscriptions().then(()=>{})
     } , [] );
 
-    const { subscriptions, loading, ViewsDuration, channelIcons } = useAppSelector(state => state.subscriptions)
+    const { subscriptions , loading , ViewsDuration , channelIcons } = useAppSelector ( state => state.subscriptions )
 
 
     return (
         <Container fluid>
-             <h3 className="ms-5 m-2">All subscriptions</h3>
-            {!loading ? (
-                subscriptions?.map((video, index) => (
-                    <VideoHorizontal viewsDuration={ViewsDuration[index]} channelIcons={channelIcons[index]} videos={video} key={index} subScreen />
-                ))
+            <h3 className="ms-5 m-2">All subscriptions</h3>
+            { !loading ? (
+                subscriptions?.map ( (video , index) => (
+                    <VideoHorizontal viewsDuration={ ViewsDuration[index] } channelIcons={ channelIcons[index] }
+                                     videos={ video } key={ index } subScreen/>
+                ) )
             ) : (
                 <SkeletonTheme color='#343a40' highlightColor='#3c4147'>
-                    <Skeleton width='100%' height='160px' count={20} />
+                    <Skeleton width='100%' height='160px' count={ 20 }/>
                 </SkeletonTheme>
-            )}
+            ) }
         </Container>
     );
 }

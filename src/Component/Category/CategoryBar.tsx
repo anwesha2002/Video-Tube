@@ -1,4 +1,4 @@
-import {useEffect , useState} from "react";
+import { useState} from "react";
 import "./_categoryBar.scss"
 import {useAppDispatch} from "../../redux/store.ts";
 import {getVideosByKeywordThunk , getyoutubeVideosThunk} from "../../redux/videoSlice.ts";

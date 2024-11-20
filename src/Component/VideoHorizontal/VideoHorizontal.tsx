@@ -1,24 +1,20 @@
 import {Col , Row} from "react-bootstrap";
 import "./_videoHorizontal.scss"
-import {AiFillEye} from "react-icons/ai";
 import moment from "moment";
 import numeral from "numeral";
-import {useEffect , useState} from "react";
-import {redirect , replace , useNavigate} from "react-router-dom";
-import {FetchApi} from "../../Data/fetchApi.ts";
+import { useNavigate} from "react-router-dom";
 
 export function VideoHorizontal({videos, searchScreen, searchresult, subScreen, channelIcons, viewsDuration}){
 
     // const [views, setViews] = useState()
     // const [duration, setDuration] = useState()
     // const [channelIcon, setChannelIcon] = useState(null)
-    const [subscriberCount, setsubscriberCount] = useState(null)
 
     const navigate = useNavigate()
 
-    const descWidth = {
-        width : searchresult ? "auto" :""
-    }
+    // const descWidth = {
+    //     width : searchresult ? "auto" :""
+    // }
 
     const {
         id,

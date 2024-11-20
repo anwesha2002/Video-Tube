@@ -5,7 +5,7 @@ import {
     MdHistory ,
     MdHome ,
     MdNewspaper ,
-    MdOutlinePodcasts , MdPages ,
+    MdOutlinePodcasts  ,
     MdPlaylistPlay ,
     MdSubscriptions ,
     MdThumbUp ,
@@ -25,9 +25,8 @@ import {AiOutlineBulb} from "react-icons/ai";
 import {useAppDispatch , useAppSelector} from "../../redux/store.ts";
 import {logout} from "../../redux/authSlice.ts";
 import {Link , useNavigate} from "react-router-dom";
-import {useEffect , useMemo , useState} from "react";
+import {useEffect  , useState} from "react";
 // import {getsubscriptions} from "../../redux/subscriptionsSlice.ts";
-import {VideoHorizontal} from "../VideoHorizontal/VideoHorizontal.tsx";
 import {getsubscriptionsThunk} from "../../redux/subscriptionsSlice.ts";
 
 const cache = new Map();
@@ -56,7 +55,7 @@ export function Sidebar({showSidebar}){
         cache.set('cachedData', allSubs)
     } , [allSubs] );
     
-    const { subscriptions, loading } = useAppSelector(state => state.subscriptions)
+    const { subscriptions } = useAppSelector(state => state.subscriptions)
 
     function handleClick(channelId){
         navigate(`/feed/${channelId}`)
