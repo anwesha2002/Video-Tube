@@ -1,4 +1,4 @@
-import {Col , Container , Row} from "react-bootstrap";
+import {Col, Container, Row} from "react-bootstrap";
 import {CategoryBar} from "../Component/Category/CategoryBar.tsx";
 import {Video} from "../Component/Video/video.tsx";
 import axios from "axios";

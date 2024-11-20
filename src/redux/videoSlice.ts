@@ -85,11 +85,7 @@ export const getVideosByKeywordThunk = createAsyncThunk<
 export const videoSliceStore = createSlice({
     name : 'yt_video',
     initialState,
-    reducers: {
-        display(initialState){
-            initialState
-        }
-    },
+    reducers: {},
     extraReducers:(builder) => {
        builder
            .addCase(getyoutubeVideosThunk.fulfilled,(state : ItemState, action)=>{
