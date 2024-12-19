@@ -3,7 +3,7 @@ import { getVideosById} from "../Data/fetchApi.ts";
 
 
 interface ItemState {
-    videos : any[],
+    videos : { statistics : any }[],
     // nextPageToken : string | null,
     // activeCategory: string | null; // Ensure it's initialized properly
     loading: boolean;
@@ -29,7 +29,7 @@ export const getVideosByIdThunk = createAsyncThunk<
         try {
             const res = await getVideosById(id)
             return {videos : res.items[0] }
-        }catch (error){
+        }catch (error : any){
             return rejectWithValue(error.message)
         }
     }

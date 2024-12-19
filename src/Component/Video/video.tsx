@@ -5,7 +5,14 @@ import moment from 'moment'
 import numeral from 'numeral'
 import { useNavigate} from "react-router-dom";
 
-export function Video({item, channelScreen, duration, channelIcon}){
+type videoProps = {
+    item : any,
+    channelScreen? : any,
+    duration : any,
+    channelIcon : any
+}
+
+export function Video({item, channelScreen, duration, channelIcon} : videoProps){
 
     const {
         id,
@@ -89,7 +96,7 @@ export function Video({item, channelScreen, duration, channelIcon}){
                 {!channelScreen && (
                     <div className='video__channel'>
                         {/*<LazyLoadImage src={channelIcon?.url} effect='blur' />*/}
-                        <img src={channelIcon?.snippet?.thumbnails?.default?.url} effect='blur' />
+                        <img src={channelIcon?.snippet?.thumbnails?.default?.url} alt="channelIcon" />
 
                         <p>{channelTitle}</p>
                     </div>

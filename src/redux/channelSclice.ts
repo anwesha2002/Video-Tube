@@ -33,11 +33,11 @@ export const channelBYIDThunk = createAsyncThunk<
     {id : string},
     {rejectValue : string}
 >(
-    'channel/getChannel',async ({id},{rejectWithValue, getState}) => {
+    'channel/getChannel',async ({id},{rejectWithValue}) => {
         try {
             const res = await channelBYID(id)
             return {channel : res.items[0]}
-        }catch (error){
+        }catch (error : any){
             return rejectWithValue(error.message)
         }
     }
@@ -53,7 +53,7 @@ export const SubStatThunk = createAsyncThunk<
             const res = await SubStat(channelID, getState)
             console.log(res.items)
             return {subscriptionStatus : res.items.length !== 0}
-        }catch (error){
+        }catch (error : any){
             return rejectWithValue(error.response.data)
         }
     }
@@ -64,16 +64,16 @@ export const getVideosByChannelThunk = createAsyncThunk<
     {id : string},
     {rejectValue : string}
 >(
-    'channel/getVideosByChannel',async ({id},{rejectWithValue, getState}) => {
+    'channel/getVideosByChannel',async ({id},{rejectWithValue}) => {
         try {
             const res = await getUploadPlayListID(id)
 
             const uploadPlaylistId = res.items[0].contentDetails.relatedPlaylists.uploads
 
             const channelres = await getVideosByChannel(uploadPlaylistId)
-            const ids = []
-            const channelIDs = []
-            channelres.items.map((video)=> {
+            const ids: any[] = []
+            const channelIDs : any[] = []
+            channelres.items.map((video : any)=> {
                 ids.push( video.snippet?.resourceId?.videoId || video?.id?.videoId ||  video?.id || video?.contentDetails?.videoId )
                 channelIDs.push(video?.snippet?.channelId || video.snippet?.resourceId?.channelId)
                 // return {videoIds : video?.id?.videoId ||  video?.id || video?.contentDetails?.videoId}
@@ -83,7 +83,7 @@ export const getVideosByChannelThunk = createAsyncThunk<
             console.log(ids)
             // console.log(icons)
             return {channelVideos : channelres.items, duration : duration, channelIcon : icons}
-        }catch (error){
+        }catch (error : any){
             console.log(error.response.data)
             return rejectWithValue(error.response.data)
         }

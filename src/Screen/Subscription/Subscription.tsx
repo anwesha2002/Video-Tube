@@ -24,11 +24,11 @@ export function Subscription() {
             <h3 className="ms-5 m-2">All subscriptions</h3>
             { !loading ? (
                 subscriptions?.map ( (video , index) => (
-                    <VideoHorizontal viewsDuration={ ViewsDuration[index] } channelIcons={ channelIcons[index] }
+                    <VideoHorizontal viewsDuration={ ViewsDuration[index] } channelIcon={ channelIcons[index] }
                                      videos={ video } key={ index } subScreen/>
                 ) )
             ) : (
-                <SkeletonTheme color='#343a40' highlightColor='#3c4147'>
+                <SkeletonTheme baseColor='#343a40' highlightColor='#3c4147'>
                     <Skeleton width='100%' height='160px' count={ 20 }/>
                 </SkeletonTheme>
             ) }

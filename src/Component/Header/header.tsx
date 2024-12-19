@@ -4,11 +4,15 @@ import {AiOutlineSearch} from "react-icons/ai";
 import {MdApps , MdNotifications} from "react-icons/md";
 import ytLogo from "../../public/Youtube_logo.png"
 import "./_header.scss"
-import { useState} from "react";
+import {FormEvent , useState} from "react";
 import {useNavigate} from "react-router-dom";
 import { useAppSelector} from "../../redux/store.ts";
 
-export function Header({handleToggleSidebar}){
+type HeaderProps = {
+    handleToggleSidebar : () => void
+}
+
+export function Header({handleToggleSidebar} : HeaderProps){
     const [input, setInput] = useState("")
     const navigate= useNavigate()
 
@@ -16,7 +20,7 @@ export function Header({handleToggleSidebar}){
     const { user } = useAppSelector(state => state.auth)
 
 
-    function handleSubmit(e){
+    function handleSubmit(e : FormEvent){
         e.preventDefault()
         setInput(input)
         if(input.trim() !== "")  navigate(`search/${input}`)

@@ -1,7 +1,6 @@
 import "./_loginScreen.scss"
 import {useAppDispatch , useAppSelector} from "../../redux/store.ts";
 import {login} from "../../redux/authSlice.ts";
-import {Simulate} from "react-dom/test-utils";
 import {useNavigate} from "react-router-dom";
 import {useEffect} from "react";
 
@@ -10,7 +9,7 @@ export function LoginScreen() {
 
     const dispatch = useAppDispatch ()
 
-    const { loading , accessToken , user , error } = useAppSelector ( (state) => state.auth )
+    const {  accessToken  } = useAppSelector ( (state) => state.auth )
     const navigate = useNavigate ()
 
     function handleClick() {
@@ -25,13 +24,13 @@ export function LoginScreen() {
     return (
         <div className='login'>
             <div className='login__container'>
-                <h2>Youtube Clone</h2>
+                <h2>Video streaming and viewing platform</h2>
                 <img
                     src='http://pngimg.com/uploads/youtube/youtube_PNG2.png'
                     alt=''
                 />
                 <button onClick={ handleClick }>Login With google</button>
-                <p>This Project is made using YOUTUBE DATA API</p>
+                {/*<p>This Project is made using YOUTUBE DATA API</p>*/}
             </div>
         </div>
     )

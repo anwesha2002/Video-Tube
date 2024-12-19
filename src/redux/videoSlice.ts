@@ -1,6 +1,15 @@
 import {createAsyncThunk , createSlice , PayloadAction} from "@reduxjs/toolkit";
 import {getDurationView , getIcon , getVideosByKeyword , getyoutubeVideos} from "../Data/fetchApi.ts";
 
+interface YouTubeVideo {
+    id: { videoId?: string; contentDetails?: { videoId: string } } | string;
+    snippet: { channelId: string };
+}
+
+interface YouTubeResponse {
+    items: YouTubeVideo[];
+    nextPageToken: string;
+}
 
 interface ItemState {
     videos : any[],
@@ -33,22 +42,22 @@ export const getyoutubeVideosThunk = createAsyncThunk<
     'yt_video/getvideos',
     async (_, {rejectWithValue, getState}) => {
         try {
-            const res  = await getyoutubeVideos(getState)
-            const ids = []
-            const channelIDs = []
-            const title = []
-            res.items.map((video)=> {
+            const res : YouTubeResponse = await getyoutubeVideos(getState)
+            const ids: string[]  = []
+            const channelIDs: string[] = []
+            // const title: any[] = []
+            res.items.map((video : any)=> {
                 ids.push(video?.id?.videoId ||  video?.id || video?.contentDetails?.videoId)
                 channelIDs.push(video?.snippet?.channelId)
-                title.push(video?.snippet.channelTitle)
+                // title.push(video?.snippet.channelTitle)
                 // return {videoIds : video?.id?.videoId ||  video?.id || video?.contentDetails?.videoId}
             })
             const duration = await getDurationView(ids)
             const icons = await getIcon(channelIDs.join(","))
             // console.log(res.data.items)
-            console.log(title)
-            return { videos : res.items, nextPageToken : res.nextPageToken , activeCategory : getState().homeVideos.activeCategory, videoIds : ids, duration : duration, channelIcon : icons}
-        }catch (error){
+            // console.log(title)
+            return { videos : res.items, nextPageToken : res.nextPageToken , activeCategory : (getState() as any).homeVideos.activeCategory, videoIds : ids, duration : duration, channelIcon : icons}
+        }catch (error : any){
             return rejectWithValue(error.message)
         }
     }
@@ -64,9 +73,9 @@ export const getVideosByKeywordThunk = createAsyncThunk<
         try {
             const res = await getVideosByKeyword(keyword,getState)
             console.log('keyword',keyword)
-            const ids = []
-            const channelIDs = []
-            res.items.map((video)=> {
+            const ids : any[] = []
+            const channelIDs: any[] = []
+            res.items.map((video : any)=> {
                 ids.push(video?.id?.videoId ||  video?.id || video?.contentDetails?.videoId)
                 channelIDs.push(video?.snippet?.channelId)
                 // return {videoIds : video?.id?.videoId ||  video?.id || video?.contentDetails?.videoId}
@@ -75,7 +84,7 @@ export const getVideosByKeywordThunk = createAsyncThunk<
             const icons = await getIcon(channelIDs.join(","))
             // console.log('keyword',res.data.items)
             return { videos : res.items, nextPageToken : res.nextPageToken, activeCategory : keyword, videoIds : ids, duration : duration, channelIcon : icons }
-        }catch (error){
+        }catch (error : any){
             return rejectWithValue(error.message)
         }
     }
@@ -85,7 +94,11 @@ export const getVideosByKeywordThunk = createAsyncThunk<
 export const videoSliceStore = createSlice({
     name : 'yt_video',
     initialState,
-    reducers: {},
+    reducers: {
+        display(initialState){
+            initialState
+        }
+    },
     extraReducers:(builder) => {
        builder
            .addCase(getyoutubeVideosThunk.fulfilled,(state : ItemState, action)=>{

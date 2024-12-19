@@ -20,12 +20,12 @@ export const GetCommentsThunk = createAsyncThunk<
     {id : string},
     {rejectValue : string}
 >(
-    'comment/getComments',async ({id },{rejectWithValue, getState}) => {
+    'comment/getComments',async ({id },{rejectWithValue }) => {
         try {
             const res = await GetComments(id)
-            console.log(getState().auth.accessToken)
+            // console.log(getState().auth.accessToken)
             return {comments : res.items}
-        }catch (error){
+        }catch (error : any){
             return rejectWithValue(error.message)
         }
     }
@@ -38,12 +38,15 @@ export const postCommentsThunk = createAsyncThunk<
 >(
     'comment/postComments', async ({id, text}, {rejectWithValue, getState, dispatch})=>{
         try {
+
+            if(!id) return
+
             await postComments(text, getState, id)
 
             setTimeout(()=>dispatch(GetCommentsThunk( { id : id })), 3000)
             // console.log(getState().auth?.accessToken)
             return
-        }catch (error){
+        }catch (error : any){
             return rejectWithValue(error.response.data)
         }
     }

@@ -4,7 +4,15 @@ import moment from "moment";
 import numeral from "numeral";
 import { useNavigate} from "react-router-dom";
 
-export function VideoHorizontal({videos, searchScreen, searchresult, subScreen, channelIcons, viewsDuration}){
+type VideoHorizontalProps = {
+    videos : any,
+    searchScreen? : any,
+    searchresult? : boolean,
+    subScreen? : any,
+    channelIcon? : any,
+    viewsDuration : any
+}
+export function VideoHorizontal({videos, searchScreen, searchresult, subScreen, channelIcon, viewsDuration} : VideoHorizontalProps){
 
     // const [views, setViews] = useState()
     // const [duration, setDuration] = useState()
@@ -127,14 +135,14 @@ export function VideoHorizontal({videos, searchScreen, searchresult, subScreen, 
 
                 {subScreen &&
                     <div className='videoHorizontal_details ' style={{fontSize: "0.7rem"}}>
-                        {channelIcons?.snippet?.customUrl} . {' '}
-                        {numeral ( channelIcons?.statistics?.subscriberCount ).format ( '0.a' )} Subscribers
+                        {channelIcon?.snippet?.customUrl} . {' '}
+                        {numeral ( channelIcon?.statistics?.subscriberCount ).format ( '0.a' )} Subscribers
                     </div>
                 }
 
                 <div className='my-1 videoHorizontal_channel d-flex align-items-center'>
                     {isVideo && searchresult &&
-                        <img src={channelIcons?.snippet.thumbnails.default.url}  />
+                        <img src={channelIcon?.snippet.thumbnails.default.url}  />
                     }
                     { isVideo && searchresult && <p className='mb-0'>{ channelTitle }</p> }
                 </div>

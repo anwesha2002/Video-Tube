@@ -1,4 +1,4 @@
-import React , {useEffect} from 'react';
+import  {useEffect} from 'react';
 import {useParams} from "react-router-dom";
 import {useAppDispatch , useAppSelector} from "../../redux/store.ts";
 // import {channelBYID , getVideosByChannel , SubStat} from "../../redux/channelSclice.ts";
@@ -16,6 +16,8 @@ export function ChannelScreen() {
 
 
     useEffect ( () => {
+        if (!channelId) return
+
         dispatch ( getVideosByChannelThunk ( { id : channelId } ) )
         dispatch ( channelBYIDThunk ( { id : channelId } ) )
 
@@ -62,7 +64,7 @@ export function ChannelScreen() {
                         : [...Array ( 15 )].map ( () => (
                             <Col md={ 3 } lg={ 3 }>
                                 <SkeletonTheme
-                                    color='#343a40'
+                                    baseColor='#343a40'
                                     highlightColor='#3c4147'>
                                     <Skeleton width='100%' height='140px'/>
                                 </SkeletonTheme>

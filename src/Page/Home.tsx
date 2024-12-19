@@ -1,15 +1,15 @@
 import {Header} from "../Component/Header/header.tsx";
 import {Sidebar} from "../Component/Sidebar/sidebar.tsx";
 import {Container} from "react-bootstrap";
-import { useState} from "react";
-import {useAppSelector} from "../redux/store.ts";
-import {useNavigate} from "react-router-dom";
+import {ReactNode , useState} from "react";
+// import {useAppSelector} from "../redux/store.ts";
+// import {useNavigate} from "react-router-dom";
 
-export function Home({children}){
+export function Home({children} : {children : ReactNode}){
 
     const [showSidebar, toggleSidebar] = useState(false)
-    const { loading,accessToken, user, error} = useAppSelector((state) => state.auth)
-    const navigate = useNavigate()
+    // const { loading,accessToken, user, error} = useAppSelector((state) => state.auth)
+    // const navigate = useNavigate()
 
     const handleToggleSidebar = () => {
         toggleSidebar(value => !value)

@@ -1,7 +1,7 @@
 import {Col , Container} from "react-bootstrap";
 import {CategoryBar} from "../Component/Category/CategoryBar.tsx";
 import {Video} from "../Component/Video/video.tsx";
-import {useEffect , useState} from "react";
+import {useEffect } from "react";
 import {useAppDispatch , useAppSelector} from "../redux/store.ts";
 // import {getVideosByKeyword , getyoutubeVideos} from "../redux/videoSlice.ts";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -46,7 +46,7 @@ export function HomeScreen() {
         activeCategory ,
         loading ,
         nextPageToken ,
-        videoIds ,
+        // videoIds ,
         duration ,
         channelIcon
     } = useAppSelector ( (state) => state.homeVideos )
@@ -54,8 +54,8 @@ export function HomeScreen() {
     const category = sessionStorage.getItem ( "keyword" )
     // const[homeVideos, setHomeVideos] = useState([])
 
-    const [allVideoIDs , setAllVideoIDs] = useState ( [] )
-    const [icons , setIcons] = useState ( [] )
+    // const [allVideoIDs , setAllVideoIDs] = useState ( [] )
+    // const [icons , setIcons] = useState ( [] )
 
 
     useEffect ( () => {
@@ -71,6 +71,8 @@ export function HomeScreen() {
 
             // getyoutubeVideos().then(()=>{})
         } else {
+            if(!category) return
+
             console.log ( JSON.parse ( category ) )
             dispatch ( getVideosByKeywordThunk ( { keyword : JSON.parse ( category ) } ) )
 
@@ -117,7 +119,7 @@ export function HomeScreen() {
                     videos.map ( (item , index) => (
                         <Col key={ index } lg={ 3 } md={ 4 }>
                             <Video duration={ duration[index] } channelIcon={ channelIcon[index] }
-                                   setAllVideoIDs={ setAllVideoIDs } setIcons={ setIcons } item={ item }
+                                     item={ item }
                                    key={ item.id }/>
                         </Col>
                     ) ) :

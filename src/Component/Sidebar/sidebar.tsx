@@ -31,7 +31,7 @@ import {getsubscriptionsThunk} from "../../redux/subscriptionsSlice.ts";
 
 const cache = new Map();
 
-export function Sidebar({showSidebar}){
+export function Sidebar({showSidebar} : {showSidebar : boolean}){
 
     if (window.scrollY) {
         window.scroll(0, 0); // reset the scroll position to the top left of the document.
@@ -57,7 +57,7 @@ export function Sidebar({showSidebar}){
     
     const { subscriptions } = useAppSelector(state => state.subscriptions)
 
-    function handleClick(channelId){
+    function handleClick(channelId : string){
         navigate(`/feed/${channelId}`)
     }
 

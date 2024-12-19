@@ -7,7 +7,7 @@ export const FetchApi  = axios.create({
         }
     })
 
-export async function getyoutubeVideos(getState){
+export async function getyoutubeVideos(getState : () => any){
     try {
         const res = await FetchApi("/videos",{
             params : {
@@ -26,7 +26,7 @@ export async function getyoutubeVideos(getState){
     }
 }
 
-export async function getVideosByKeyword( keyword : string, getState ){
+export async function getVideosByKeyword( keyword : string, getState : () => any ){
     try {
         const res = await FetchApi("/search",{
             params : {
@@ -45,7 +45,7 @@ export async function getVideosByKeyword( keyword : string, getState ){
     }
 }
 
-export async function getsubscriptions(getState){
+export async function getsubscriptions(getState : () => any){
     try {
         const res = await FetchApi("/subscriptions",{
             params : {
@@ -130,7 +130,7 @@ export async function GetComments(id : string | undefined ){
     }
 }
 
-export async function postComments(text : string, getState ,id : string,  ){
+export async function postComments(text : string, getState : () => any ,id : string,  ){
 
     const obj = {
         "snippet" : {
@@ -177,7 +177,7 @@ export async function channelBYID(id : string | undefined){
     }
 }
 
-export async function SubStat(channelID : string, getState){
+export async function SubStat(channelID : string, getState : () => any){
     try {
         const res = await FetchApi("/subscriptions",{
             params : {
@@ -229,7 +229,7 @@ export async function getVideosByChannel(uploadPlaylistId : string | undefined){
     }
 }
 
-export async function getDurationView(videoIds : string){
+export async function getDurationView(videoIds : string[] | string){
     try {
         const res = await FetchApi('/videos',{
             params:{

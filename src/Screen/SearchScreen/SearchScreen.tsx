@@ -1,4 +1,4 @@
-import React , {useEffect , useState} from 'react';
+import  {useEffect , useState} from 'react';
 import {useParams} from "react-router-dom";
 import {useAppDispatch , useAppSelector} from "../../redux/store.ts";
 // import {searchVideosByKeyword} from "../../redux/searchVideoSlice.ts";
@@ -17,6 +17,9 @@ export function SearchScreen() {
     console.log ( "query" , query )
 
     useEffect ( () => {
+
+        if(!query) return
+
         dispatch ( searchVideosByKeywordThunk ( { keyword : query } ) )
         // searchVideosByKeyword( {keyword : query }).then(()=>{})
 
@@ -39,7 +42,7 @@ export function SearchScreen() {
                     />
                 ) )
             ) : (
-                <SkeletonTheme color='#343a40' highlightColor='#3c4147'>
+                <SkeletonTheme baseColor='#343a40' highlightColor='#3c4147'>
                     <Skeleton width='100%' height='160px' count={ 20 }/>
                 </SkeletonTheme>
             ) }

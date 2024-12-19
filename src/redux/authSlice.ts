@@ -5,6 +5,10 @@ import firebase from "firebase/compat/app";
 // import {LOGIN_REQUEST , LOGIN_SUCCESS} from "./actionType.ts";
 
 
+type profile = {
+    name : string,
+    picture : string
+}
 
 interface AuthState  {
     user : {name : string , profileURL : string} | null
@@ -14,7 +18,7 @@ interface AuthState  {
 }
 
 export const initialState : AuthState = {
-    user :  sessionStorage.getItem('yt-user')? JSON.parse(sessionStorage.getItem('yt-user')) : null,
+    user :  sessionStorage.getItem('yt-user')? JSON.parse(sessionStorage.getItem('yt-user') as string) : null,
     loading: false,
     accessToken : sessionStorage.getItem('yt-accessToken')? sessionStorage.getItem('yt-accessToken') :  null,
     error : null
@@ -34,14 +38,19 @@ export const login = createAsyncThunk<
             const res = await auth.signInWithPopup(provider) ;
             console.log(res)
 
-            const accessToken = res.credential?.accessToken ;
+            const accessToken = (res.credential as firebase.auth.OAuthCredential)?.accessToken;
+            if (!accessToken) {
+                throw new Error("Access token is missing");
+            }
+
+            // const accessToken =  (res.credential as credential)?.accessToken ;
             const profile = {
-                name: res.additionalUserInfo?.profile?.name as string,
-                photoURL: res.additionalUserInfo?.profile?.picture as string,
+                name: (res.additionalUserInfo?.profile as profile)?.name as string,
+                profileURL: (res.additionalUserInfo?.profile as profile)?.picture as string,
             };
 
-            return { accessToken : accessToken!, profile }; // Return combined data
-        } catch (error) {
+            return { accessToken : accessToken!, profile : profile }; // Return combined data
+        } catch (error : any) {
             console.error('Login error:', error.message);
             return rejectWithValue(error.message); // Reject with error message
         }
@@ -50,7 +59,7 @@ export const login = createAsyncThunk<
 
 export const logout = createAsyncThunk(
     'auth/logout',
-    async (_,{rejectWithValue}) => {
+    async (_) => {
             await auth.signOut()
             sessionStorage.removeItem('yt-accessToken')
             sessionStorage.removeItem('yt-user')
@@ -124,7 +133,7 @@ export const createSliceStore = createSlice ( {
                 sessionStorage.setItem('yt-accessToken', state.accessToken)
                 sessionStorage.setItem('yt-user', JSON.stringify(state.user))
             })
-            .addCase(login.rejected, (state : AuthState, action : PayloadAction<String | undefined>) => {
+            .addCase(login.rejected, (state : AuthState, action : PayloadAction<string | undefined>) => {
                 state.loading = false;
                 state.accessToken = null
                 state.error = action.payload || 'Login failed'; // Set error message from rejected action

@@ -1,4 +1,4 @@
-import {createAsyncThunk , createSlice , PayloadAction} from "@reduxjs/toolkit";
+import {createAsyncThunk , createSlice } from "@reduxjs/toolkit";
 import {getDurationView , getIcon , searchVideosByKeyword} from "../Data/fetchApi.ts";
 
 interface searchState {
@@ -29,9 +29,9 @@ export const searchVideosByKeywordThunk = createAsyncThunk<
     async ({ keyword } , {rejectWithValue}) => {
         try {
             const res = await searchVideosByKeyword(keyword)
-            const ids = []
-            const channelIDs = []
-            res.items.map((video)=> {
+            const ids: any[] = []
+            const channelIDs : any[] = []
+            res.items.map((video : any)=> {
                 ids.push(video?.id?.videoId)
                 channelIDs.push(video?.snippet?.resourceId?.channelId || video?.snippet?.channelId)
                 // return {videoIds : video?.id?.videoId ||  video?.id || video?.contentDetails?.videoId}
@@ -41,7 +41,7 @@ export const searchVideosByKeywordThunk = createAsyncThunk<
             console.log('keyword',keyword)
             // console.log('keyword',res.data.items)
             return { videos : res.items, ViewsDuration : duration_and_Views, channelIcons : icons  }
-        }catch (error){
+        }catch (error : any){
             return rejectWithValue(error.message)
         }
     }

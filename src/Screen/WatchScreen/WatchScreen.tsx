@@ -19,6 +19,8 @@ export function WatchScreen() {
     const dispatch = useAppDispatch()
 
     useEffect ( () => {
+        if(!id) return
+
         dispatch(getVideosByIdThunk({id : id}))
         dispatch(getReletedVideosTHunk({id : id}))
 
@@ -29,7 +31,7 @@ export function WatchScreen() {
 
     const { videos, loading } = useAppSelector(state => state.selectVideo)
 
-    const { relatedVideos, loading : relatedVideoLoading, ViewsDuration , channelIcons } = useAppSelector(state => state.relatedVideo)
+    const { relatedVideos, ViewsDuration , channelIcons } = useAppSelector(state => state.relatedVideo)
 
     // const {comments} = useAppSelector(state => state.comment)
 
@@ -53,12 +55,12 @@ export function WatchScreen() {
                 <VideoMetaData video = {videos}  videoID={id}/>
 
 
-                <Comments videoId = {id} totalComments={videos?.statistics?.commentCount}/>
+                <Comments videoId = {id} totalComments={(videos)[0]?.statistics?.commentCount}/>
             </Col>
             <Col lg={ 4 }>
                 {!loading ?
                     relatedVideos?.map ( (video, index) => (
-                        <VideoHorizontal channelIcons={channelIcons[index]} viewsDuration={ViewsDuration[index]} videos={video} key={index} />
+                        <VideoHorizontal channelIcon={channelIcons[index]} viewsDuration={ViewsDuration[index]} videos={video} key={index} />
                         )
                 ) :
 

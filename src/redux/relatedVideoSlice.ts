@@ -24,12 +24,12 @@ export const getReletedVideosTHunk = createAsyncThunk<
     {rejectValue : string}
 >(
     'relatedVideos/getRelatedVideos',
-    async ({ id } , {rejectWithValue, getState}) => {
+    async ({ id } , {rejectWithValue}) => {
         try {
             const res = await getReletedVideos(id)
-            const ids = []
-            const channelIDs = []
-            res.items.map((video)=> {
+            const ids: any[] = []
+            const channelIDs: any[] = []
+            res.items.map((video : any)=> {
                 ids.push(video?.id?.videoId)
                 channelIDs.push(video?.snippet?.resourceId?.channelId || video?.snippet?.channelId || video?.channelId)
                 // return {videoIds : video?.id?.videoId ||  video?.id || video?.contentDetails?.videoId}
@@ -41,7 +41,7 @@ export const getReletedVideosTHunk = createAsyncThunk<
             const icons = await getIcon(channelIDs.join(","))
             console.log(res)
             return { relatedVideos : res.items, ViewsDuration : duration_and_Views, channelIcons : icons }
-        }catch (error){
+        }catch (error : any){
             return rejectWithValue(error.response.data)
         }
     }

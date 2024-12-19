@@ -14,7 +14,7 @@ type videoMetadataProps = {
     videoID : string |undefined
 }
 
-export function VideoMetaData({video ,videoID} : videoMetadataProps) {
+export function VideoMetaData({video } : videoMetadataProps) {
 
     const dispatch = useAppDispatch()
 

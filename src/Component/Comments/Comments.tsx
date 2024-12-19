@@ -2,7 +2,7 @@ import "./_comments.scss"
 import {Comment} from "../Comment/Comment.tsx";
 import {Form} from "react-bootstrap";
 import {useAppDispatch , useAppSelector} from "../../redux/store.ts";
-import {useEffect , useState} from "react";
+import {FormEvent , useEffect , useState} from "react";
 import {GetCommentsThunk , postCommentsThunk} from "../../redux/commentSlice.ts";
 
 
@@ -33,7 +33,7 @@ export function Comments({videoId, totalComments} : CommentsProps){
         (comment) => comment.snippet.topLevelComment.snippet
     )
 
-    function handleSubmit(e){
+    function handleSubmit(e : FormEvent){
         e.preventDefault()
         setCommentText(commentText)
         if(commentText.length == 0) return

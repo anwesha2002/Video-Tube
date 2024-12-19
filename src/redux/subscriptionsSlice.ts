@@ -30,9 +30,9 @@ export const getsubscriptionsThunk = createAsyncThunk<
     'subscription/getsubscriptions',async (_,{rejectWithValue, getState}) => {
         try {
             const res = await getsubscriptions(getState)
-            const ids = []
-            const channelIDs = []
-            res.items.map((video)=> {
+            const ids : any[] = []
+            const channelIDs : any[] = []
+            res.items.map((video : any)=> {
                 ids.push(video?.id?.videoId || video?.id)
                 channelIDs.push(video?.snippet?.resourceId?.channelId || video?.snippet.channelId || video.channelId)
                 // return {videoIds : video?.id?.videoId ||  video?.id || video?.contentDetails?.videoId}
@@ -41,7 +41,7 @@ export const getsubscriptionsThunk = createAsyncThunk<
             const icons = await getIcon(channelIDs.join(","))
             console.log(res.items)
             return {subscriptions : res.items, ViewsDuration : duration_and_Views, channelIcons : icons}
-        }catch (error){
+        }catch (error : any){
             return rejectWithValue(error.response.data)
         }
     }
