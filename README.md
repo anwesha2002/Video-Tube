@@ -27,7 +27,8 @@ Experience the project live: [Video-Tube](https://youtube-clone-anwesha2002s-pro
 
 ## 📸 Screenshots
 
-<img width="2432" alt="Untitled (13)" src="https://github.com/user-attachments/assets/d26ae8a3-8619-46d9-8797-8884bb0173d4" />
+<img width="2420" alt="Untitled (14)" src="https://github.com/user-attachments/assets/ecb43a16-422f-415d-b657-89f215192190" />
+
 ![Watch Page](https://github.com/user-attachments/assets/c011b1f4-7e0b-4138-9db2-24541dcb566c)
 ![Subscription Page](https://github.com/user-attachments/assets/49804626-dfbc-4eaf-8806-f89796722fa7)
 ![Video Details](https://github.com/user-attachments/assets/06a0b27a-8a9d-4f7b-9f7e-a1b6cc12197e)
