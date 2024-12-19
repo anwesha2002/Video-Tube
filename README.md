@@ -17,7 +17,7 @@ A fully functional video streaming platform built using the **YouTube Data API**
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React, TypeScript, Redux Toolkit, Tailwind CSS
+- **Frontend**: React, TypeScript, Redux Toolkit, React-Bootstrap and Scss
 - **Backend**: Firebase
 - **API**: YouTube Data API
 
@@ -27,9 +27,18 @@ Experience the project live: [Video-Tube](https://youtube-clone-anwesha2002s-pro
 
 ## 📸 Screenshots
 
+- Home Page and Search Page
+  
 <img width="2420" alt="Untitled (14)" src="https://github.com/user-attachments/assets/ecb43a16-422f-415d-b657-89f215192190" />
+
+
+- Subscription Page and Watch Page
+  
 <img width="2128" alt="Untitled (16)" src="https://github.com/user-attachments/assets/135a04cd-5c20-4cb6-a705-8ccc2426cd52" />
 
+
+- Details Page
+  
 ![Video Details](https://github.com/user-attachments/assets/06a0b27a-8a9d-4f7b-9f7e-a1b6cc12197e)
 
 ## 🔧 Installation
@@ -38,9 +47,9 @@ Experience the project live: [Video-Tube](https://youtube-clone-anwesha2002s-pro
    ```bash
    git clone https://github.com/your-username/your-repo-name.git
 
-2.Navigate to the project directory:
-    ```bash
-    cd your-repo-name
+2. Navigate to the project directory:
+   ```bash
+   git clone https://github.com/your-username/your-repo-name.git
 
 3. Install dependencies:
      ```bash
@@ -50,7 +59,21 @@ Experience the project live: [Video-Tube](https://youtube-clone-anwesha2002s-pro
      ```bash
     REACT_APP_YOUTUBE_API_KEY=your_api_key
 
-5. Start the development server:
+5. Start the development server
+    ```bash
+     npm start
+   
+
+📂 Project Structure
+
+src/
+├── components/        # Reusable React components
+    └── styles/            # React-Bootstrap and Scss
+├── pages/             # Common Route Page
+├── redux/             # Redux Toolkit slices and store
+├── Data/              # API service functions
+└── Screen/            # Application pages
+   └── styles/            # React-Bootstrap and Scss
 
 
 
