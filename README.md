@@ -23,7 +23,7 @@ A fully functional video streaming platform built using the **YouTube Data API**
 
 ## 🚀 Live Demo
 
-Experience the project live: [Video-Tube](https://youtube-clone-anwesha2002s-projects.vercel.app/)
+Experience the project live: [Video-Tube](youtube-clone-git-master-anwesha2002s-projects.vercel.app)
 
 ## 📸 Screenshots
 
@@ -66,6 +66,7 @@ Experience the project live: [Video-Tube](https://youtube-clone-anwesha2002s-pro
 
 📂 Project Structure
 
+```plaintext
 src/
 ├── components/        # Reusable React components
     └── styles/            # React-Bootstrap and Scss
