@@ -45,11 +45,11 @@ Experience the project live: [Video-Tube](https://youtube-clone-anwesha2002s-pro
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/your-username/your-repo-name.git
+   git clone https://github.com/anwesha2002/Video-Tube.git
 
 2. Navigate to the project directory:
    ```bash
-   git clone https://github.com/your-username/your-repo-name.git
+   cd Video-Tube
 
 3. Install dependencies:
      ```bash
@@ -57,7 +57,7 @@ Experience the project live: [Video-Tube](https://youtube-clone-anwesha2002s-pro
 
 4. Set up the environment variables in a .env file:
      ```bash
-    REACT_APP_YOUTUBE_API_KEY=your_api_key
+    REACT_APP_APILEY=youtube_api_key
 
 5. Start the development server
     ```bash
